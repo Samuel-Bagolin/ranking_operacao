@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking por Setores - Operações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --card-header: #252525;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --onboarding: #6a3dff;
+            --ongoing: #00c853;
+            --chat: #ffab00;
+            --retencao: #ff1744;
+            --agendamento: #3a86ff;
+            --accent: #6a3dff;
+            --accent-hover: #7d52ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(to right, var(--accent), #3a86ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trophy-icon {
+            font-size: 2rem;
+            color: gold;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        .sectors-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sector-tab {
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sector-tab.active {
+            box-shadow: 0 0 15px rgba(106, 61, 255, 0.5);
+        }
+
+        .sector-tab i {
+            font-size: 1.2rem;
+        }
+
+        .onboarding-tab {
+            background-color: var(--onboarding);
+        }
+
+        .ongoing-tab {
+            background-color: var(--ongoing);
+        }
+
+        .chat-tab {
+            background-color: var(--chat);
+        }
+
+        .retencao-tab {
+            background-color: var(--retencao);
+        }
+
+        .agendamento-tab {
+            background-color: var(--agendamento);
+        }
+
+        .sector-content {
+            display: none;
+        }
+
+        .sector-content.active {
+            display: block;
+        }
+
+        .sector-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--card-header);
+            border-radius: 10px;
+        }
+
+        .sector-brasao {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .sector-info {
+            flex-grow: 1;
+        }
+
+        .sector-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .sector-description {
+            color: var(--text-secondary);
+        }
+
+        .sector-metric {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .ranking-section {
+            margin-bottom: 40px;
+        }
+
+        .ranking-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .ranking-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: var(--card-dark);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .ranking-table th, .ranking-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .ranking-table th {
+            background-color: var(--card-header);
+            font-weight: bold;
+        }
+
+        .ranking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ranking-table tr:hover {
+            background-color: #252525;
+        }
+
+        .position-cell {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+
+        .position-1 {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .position-2 {
+            background-color: rgba(192, 192, 192, 0.1);
+        }
+
+        .position-3 {
+            background-color: rgba(205, 127, 50, 0.1);
+        }
+
+        .card {
+            background-color: var(--card-dark);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .member-info {
+            flex-grow: 1;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .position-badge {
+            background: linear-gradient(135deg, #6a3dff, #3a86ff);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .score-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-input {
+            width: 60px;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #2a2a2a;
+            color: var(--text-primary);
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 40px;
+            height: 250px;
+        }
+
+        .podium-item {
+            text-align: center;
+            width: 180px;
+            border-radius: 10px 10px 0 0;
+            padding: 20px;
+        }
+
+        .first {
+            height: 200px;
+            background: linear-gradient(to bottom, gold, #daa520);
+            order: 2;
+        }
+
+        .second {
+            height: 160px;
+            background: linear-gradient(to bottom, silver, #a8a8a8);
+            order: 1;
+        }
+
+        .third {
+            height: 140px;
+            background: linear-gradient(to bottom, #cd7f32, #8c5c2c);
+            order: 3;
+        }
+
+        .podium-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 15px;
+        }
+
+        .podium-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .podium-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-dark);
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #2a2a2a;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .ranking-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .podium {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+                gap: 5px;
+            }
+            
+            .podium-item {
+                width: 100%;
+                max-width: 250px;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px;
+                height: auto !important;
+            }
+            
+            .podium-avatar {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .sector-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .ranking-table {
+                font-size: 0.9rem;
+            }
+            
+            .ranking-table th, .ranking-table td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="trophy-icon">🏆</span>
+                <h1>Ranking por Setores</h1>
+            </div>
+            <button id="addMemberBtn"><i class="fas fa-plus"></i> Novo Colaborador</button>
+        </header>
+
+        <div class="sectors-tabs">
+            <div class="sector-tab onboarding-tab active" data-sector="onboarding">
+                <i class="fas fa-user-plus"></i> Onboarding
+            </div>
+            <div class="sector-tab ongoing-tab" data-sector="ongoing">
+                <i class="fas fa-tasks"></i> Ongoing
+            </div>
+            <div class="sector-tab chat-tab" data-sector="chat">
+                <i class="fas fa-comments"></i> Chat
+            </div>
+            <div class="sector-tab retencao-tab" data-sector="retencao">
+                <i class="fas fa-hand-holding-heart"></i> Retenção
+            </div>
+            <div class="sector-tab agendamento-tab" data-sector="agendamento">
+                <i class="fas fa-calendar-check"></i> Agendamento
+            </div>
+        </div>
+
+        <!-- Conteúdo do Setor Onboarding -->
+        <div class="sector-content active" id="onboarding-content">
+            <div class="sector-header">
+                <div class="sector-brasao">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="sector-info">
+                    <h2 class="sector-title">Onboarding</h2>
+                    <p class="sector-description">Equipe responsável pela integração de novos clientes</p>
+                </div>
+                <div class="sector-metric">
+                    Métrica: Taxa de Sucesso na Integração
+                </div>
+            </div>
+
+            <div class="ranking-section">
+                <h2 class="ranking-title">Top Performers</h2>
+                <div class="podium" id="onboarding-podium">
+                    <!-- Pódio será gerado via JavaScript -->
+                </div>
+            </div>
+
+            <div class="ranking-section">
+                <h2 class="ranking-title">Ranking Completo</h2>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="position-cell">Pos</th>
+                            <th>Colaborador</th>
+                            <th>Pontuação</th>
+                            <th>Métrica</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="onboarding-table-body">
+                        <!-- Conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ranking-section">
+                <h2 class="ranking-title">Equipe</h2>
+                <div class="ranking-container" id="onboarding-ranking">
+                    <!-- Cards serão inseridos via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo dos outros setores (simplificado) -->
+        <div class="sector-content" id="ongoing-content">
+            <div class="sector-header">
+                <div class="sector-brasao">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="sector-info">
+                    <h2 class="sector-title">Ongoing</h2>
+                    <p class="sector-description">Equipe de suporte contínuo e acompanhamento</p>
+                </div>
+                <div class="sector-metric">
+                    Métrica: Resolução no Primeiro Contato
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Top Performers</h2>
+                <div class="podium" id="ongoing-podium">
+                    <!-- Pódio será gerado via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Ranking Completo</h2>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="position-cell">Pos</th>
+                            <th>Colaborador</th>
+                            <th>Pontuação</th>
+                            <th>Métrica</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ongoing-table-body">
+                        <!-- Conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-container" id="ongoing-ranking">
+                <!-- Conteúdo será gerado via JavaScript -->
+            </div>
+        </div>
+
+        <div class="sector-content" id="chat-content">
+            <div class="sector-header">
+                <div class="sector-brasao">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="sector-info">
+                    <h2 class="sector-title">Chat</h2>
+                    <p class="sector-description">Equipe de atendimento via chat</p>
+                </div>
+                <div class="sector-metric">
+                    Métrica: Satisfação do Cliente (NPS)
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Top Performers</h2>
+                <div class="podium" id="chat-podium">
+                    <!-- Pódio será gerado via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Ranking Completo</h2>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="position-cell">Pos</th>
+                            <th>Colaborador</th>
+                            <th>Pontuação</th>
+                            <th>Métrica</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chat-table-body">
+                        <!-- Conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-container" id="chat-ranking">
+                <!-- Conteúdo será gerado via JavaScript -->
+            </div>
+        </div>
+
+        <div class="sector-content" id="retencao-content">
+            <div class="sector-header">
+                <div class="sector-brasao">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="sector-info">
+                    <h2 class="sector-title">Retenção</h2>
+                    <p class="sector-description">Equipe especializada em reter clientes</p>
+                </div>
+                <div class="sector-metric">
+                    Métrica: Taxa de Retenção
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Top Performers</h2>
+                <div class="podium" id="retencao-podium">
+                    <!-- Pódio será gerado via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Ranking Completo</h2>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="position-cell">Pos</th>
+                            <th>Colaborador</th>
+                            <th>Pontuação</th>
+                            <th>Métrica</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="retencao-table-body">
+                        <!-- Conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-container" id="retencao-ranking">
+                <!-- Conteúdo será gerado via JavaScript -->
+            </div>
+        </div>
+
+        <div class="sector-content" id="agendamento-content">
+            <div class="sector-header">
+                <div class="sector-brasao">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="sector-info">
+                    <h2 class="sector-title">Agendamento</h2>
+                    <p class="sector-description">Equipe de agendamento и calendarização</p>
+                </div>
+                <div class="sector-metric">
+                    Métrica: Taxa de Conversão de Agendamentos
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Top Performers</h2>
+                <div class="podium" id="agendamento-podium">
+                    <!-- Pódio será gerado via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-section">
+                <h2 class="ranking-title">Ranking Completo</h2>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="position-cell">Pos</th>
+                            <th>Colaborador</th>
+                            <th>Pontuação</th>
+                            <th>Métrica</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agendamento-table-body">
+                        <!-- Conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-container" id="agendamento-ranking">
+                <!-- Conteúdo será gerado via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar colaborador -->
+    <div class="modal" id="memberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Adicionar Colaborador</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="memberForm">
+                <input type="hidden" id="memberId">
+                <div class="form-group">
+                    <label for="memberName">Nome:</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberSector">Setor:</label>
+                    <select id="memberSector" required>
+                        <option value="">Selecione um setor</option>
+                        <option value="onboarding">Onboarding</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="chat">Chat</option>
+                        <option value="retencao">Retenção</option>
+                        <option value="agendamento">Agendamento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="memberPhoto">Foto (URL):</label>
+                    <input type="url" id="memberPhoto" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="memberScore">Pontuação:</label>
+                    <input type="number" id="memberScore" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="memberMetric">Métrica (%):</label>
+                    <input type="number" id="memberMetric" value="0" min="0" max="100">
+                </div>
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo para cada setor
+        const sectors = {
+            onboarding: [
+                { id: 1, name: "Ana Silva", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98 },
+                { id: 2, name: "Carlos Oliveira", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95 },
+                { id: 3, name: "Mariana Santos", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93 },
+                { id: 4, name: "Ricardo Almeida", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91 },
+                { id: 5, name: "Fernanda Lima", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90 }
+            ],
+            ongoing: [
+                { id: 1, name: "Paulo Costa", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97 },
+                { id: 2, name: "Juliana Martins", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96 },
+                { id: 3, name: "Roberto Santos", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94 }
+            ],
+            chat: [
+                { id: 1, name: "Camila Rodrigues", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99 },
+                { id: 2, name: "Diego Alves", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97 },
+                { id: 3, name: "Tatiane Souza", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96 }
+            ],
+            retencao: [
+                { id: 1, name: "Amanda Nunes", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92 },
+                { id: 2, name: "Rodrigo Ferreira", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90 },
+                { id: 3, name: "Patrícia Silva", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88 }
+            ],
+            agendamento: [
+                { id: 1, name: "Felipe Costa", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95 },
+                { id: 2, name: "Larissa Mendes", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93 },
+                { id: 3, name: "Gabriel Oliveira", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91 }
+            ]
+        };
+
+        // Elementos DOM
+        const sectorTabs = document.querySelectorAll('.sector-tab');
+        const sectorContents = document.querySelectorAll('.sector-content');
+        const rankingContainers = {
+            onboarding: document.getElementById('onboarding-ranking'),
+            ongoing: document.getElementById('ongoing-ranking'),
+            chat: document.getElementById('chat-ranking'),
+            retencao: document.getElementById('retencao-ranking'),
+            agendamento: document.getElementById('agendamento-ranking')
+        };
+        const tableBodies = {
+            onboarding: document.getElementById('onboarding-table-body'),
+            ongoing: document.getElementById('ongoing-table-body'),
+            chat: document.getElementById('chat-table-body'),
+            retencao: document.getElementById('retencao-table-body'),
+            agendamento: document.getElementById('agendamento-table-body')
+        };
+        const podiumContainers = {
+            onboarding: document.getElementById('onboarding-podium'),
+            ongoing: document.getElementById('ongoing-podium'),
+            chat: document.getElementById('chat-podium'),
+            retencao: document.getElementById('retencao-podium'),
+            agendamento: document.getElementById('agendamento-podium')
+        };
+        const memberModal = document.getElementById('memberModal');
+        const memberForm = document.getElementById('memberForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const addMemberBtn = document.getElementById('addMemberBtn');
+        const closeModal = document.querySelector('.close');
+
+        // Função para renderizar o ranking de um setor
+        function renderRanking(sector) {
+            const container = rankingContainers[sector];
+            const tableBody = tableBodies[sector];
+            const podiumContainer = podiumContainers[sector];
+            let members = sectors[sector];
+            
+            // Ordenar por pontuação (maior primeiro)
+            members.sort((a, b) => b.score - a.score);
+            
+            // Limpar os containers
+            container.innerHTML = '';
+            tableBody.innerHTML = '';
+            podiumContainer.innerHTML = '';
+            
+            // Renderizar o pódio (apenas os 3 primeiros)
+            if (members.length > 0) {
+                const positions = ['second', 'first', 'third'];
+                
+                // Criar os elementos do pódio
+                for (let i = 0; i < Math.min(3, members.length); i++) {
+                    const member = members[i];
+                    const podiumItem = document.createElement('div');
+                    podiumItem.className = `podium-item ${positions[i]}`;
+                    podiumItem.innerHTML = `
+                        <img src="${member.photo}" alt="${member.name}" class="podium-avatar">
+                        <div class="podium-name">${member.name}</div>
+                        <div class="podium-score">${member.metric}%</div>
+                    `;
+                    podiumContainer.appendChild(podiumItem);
+                }
+            }
+            
+            // Adicionar membros ao ranking
+            members.forEach((member, index) => {
+                // Adicionar à tabela
+                const row = document.createElement('tr');
+                if (index < 3) {
+                    row.classList.add(`position-${index+1}`);
+                }
+                
+                row.innerHTML = `
+                    <td class="position-cell">${index + 1}º</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${member.photo}" alt="${member.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            ${member.name}
+                        </div>
+                    </td>
+                    <td>${member.score} pts</td>
+                    <td>${member.metric}%</td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="number" class="score-input" id="table-score-${sector}-${member.id}" placeholder="Pontos" style="width: 70px;">
+                            <button class="btn-small" onclick="addScore('${sector}', ${member.id}, 'table')">+</button>
+                            <input type="number" class="score-input" id="table-metric-${sector}-${member.id}" placeholder="Métrica" min="0" max="100" style="width: 70px;">
+                            <button class="btn-small" onclick="updateMetric('${sector}', ${member.id}, 'table')">+</button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                
+                // Adicionar card
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <img src="${member.photo}" alt="${member.name}" class="avatar">
+                        <div class="member-info">
+                            <div class="member-name">${member.name}</div>
+                        </div>
+                        <div class="position-badge">#${index + 1}</div>
+                    </div>
+                    <div class="stats">
+                        <div class="score">${member.score} pts</div>
+                        <div class="score">${member.metric}%</div>
+                    </div>
+                    <div class="stats">
+                        <div class="score-form">
+                            <input type="number" class="score-input" id="score-${sector}-${member.id}" placeholder="Pontos">
+                            <button onclick="addScore('${sector}', ${member.id}, 'card')">+</button>
+                        </div>
+                        <div class="score-form">
+                            <input type="number" class="score-input" id="metric-${sector}-${member.id}" placeholder="Métrica" min="0" max="100">
+                            <button onclick="updateMetric('${sector}', ${member.id}, 'card')">Atualizar</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Função para adicionar pontuação
+        function addScore(sector, id, type) {
+    const member = sectors[sector].find(m => m.id === id);
+    if (member) {
+        const inputElement = document.getElementById(`${type}-score-${sector}-${id}`);
+        const points = parseInt(inputElement.value) || 0;
+        
+        if (points > 0) {
+            member.score += points;
+            inputElement.value = '';
+            renderRanking(sector);
+            saveToLocalStorage();
+        }
+    }
+}
+
+// Função para atualizar métrica
+function updateMetric(sector, id, type) {
+    const member = sectors[sector].find(m => m.id === id);
+    if (member) {
+        const inputElement = document.getElementById(`${type}-metric-${sector}-${id}`);
+        const metricValue = parseInt(inputElement.value) || 0;
+        
+        if (metricValue >= 0 && metricValue <= 100) {
+            member.metric = metricValue;
+            inputElement.value = '';
+            renderRanking(sector);
+            saveToLocalStorage();
+        }
+    }
+}
+
+// Função para salvar dados no localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('sectorsData', JSON.stringify(sectors));
+}
+
+// Função para carregar dados do localStorage
+function loadFromLocalStorage() {
+    const savedData = localStorage.getItem('sectorsData');
+    if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        Object.keys(parsedData).forEach(sector => {
+            sectors[sector] = parsedData[sector];
+        });
+    }
+}
+
+// Função para abrir modal de adicionar/editar membro
+function openMemberModal(memberId = null, sector = null) {
+    const modal = document.getElementById('memberModal');
+    const form = document.getElementById('memberForm');
+    
+    if (memberId) {
+        // Modo edição
+        modalTitle.textContent = 'Editar Colaborador';
+        const member = findMemberById(memberId);
+        if (member) {
+            document.getElementById('memberId').value = memberId;
+            document.getElementById('memberName').value = member.name;
+            document.getElementById('memberSector').value = sector;
+            document.getElementById('memberPhoto').value = member.photo;
+            document.getElementById('memberScore').value = member.score;
+            document.getElementById('memberMetric').value = member.metric;
+        }
+    } else {
+        // Modo adição
+        modalTitle.textContent = 'Adicionar Colaborador';
+        form.reset();
+        if (sector) {
+            document.getElementById('memberSector').value = sector;
+        }
+    }
+    
+    modal.style.display = 'flex';
+}
+
+// Função para encontrar membro por ID em qualquer setor
+function findMemberById(id) {
+    for (const sector in sectors) {
+        const member = sectors[sector].find(m => m.id === id);
+        if (member) return member;
+    }
+    return null;
+}
+
+// Função para gerar um ID único
+function generateId() {
+    return Math.max(...Object.values(sectors).flat().map(m => m.id), 0) + 1;
+}
+
+// Event Listeners
+sectorTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const sector = tab.getAttribute('data-sector');
+        
+        // Atualizar tabs ativas
+        sectorTabs.forEach(t => t.classList.remove('active'));
+        sectorContents.forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(`${sector}-content`).classList.add('active');
+        
+        // Renderizar o ranking do setor selecionado
+        renderRanking(sector);
+    });
+});
+
+addMemberBtn.addEventListener('click', () => {
+    const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
+    openMemberModal(null, activeSector);
+});
+
+closeModal.addEventListener('click', () => {
+    memberModal.style.display = 'none';
+});
+
+memberForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const memberId = document.getElementById('memberId').value;
+    const name = document.getElementById('memberName').value;
+    const sector = document.getElementById('memberSector').value;
+    const photo = document.getElementById('memberPhoto').value || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80';
+    const score = parseInt(document.getElementById('memberScore').value) || 0;
+    const metric = parseInt(document.getElementById('memberMetric').value) || 0;
+    
+    if (memberId) {
+        // Editar membro existente
+        const oldSector = findMemberSector(parseInt(memberId));
+        if (oldSector) {
+            // Remover do setor antigo
+            sectors[oldSector] = sectors[oldSector].filter(m => m.id !== parseInt(memberId));
+        }
+        
+        // Adicionar ao novo setor
+        sectors[sector].push({
+            id: parseInt(memberId),
+            name,
+            photo,
+            score,
+            metric
+        });
+    } else {
+        // Adicionar novo membro
+        sectors[sector].push({
+            id: generateId(),
+            name,
+            photo,
+            score,
+            metric
+        });
+    }
+    
+    // Renderizar o ranking e salvar
+    renderRanking(sector);
+    saveToLocalStorage();
+    
+    // Fechar modal
+    memberModal.style.display = 'none';
+});
+
+// Função para encontrar em qual setor está um membro
+function findMemberSector(id) {
+    for (const sector in sectors) {
+        if (sectors[sector].some(m => m.id === id)) {
+            return sector;
+        }
+    }
+    return null;
+}
+
+// Inicializar a aplicação
+document.addEventListener('DOMContentLoaded', () => {
+    // Carregar dados do localStorage
+    loadFromLocalStorage();
+    
+    // Renderizar o ranking inicial (onboarding)
+    renderRanking('onboarding');
+    
+    // Fechar modal ao clicar fora dele
+    window.addEventListener('click', (e) => {
+        if (e.target === memberModal) {
+            memberModal.style.display = 'none';
+        }
+    });
+});
