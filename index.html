@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏆 Ranking Operação</title>
+    <title>🏆 Ranking Inteligente por Setores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -11,7 +11,7 @@
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
             --bg-tertiary: #2d2d2d;
-            --text-primary: #b0b0b0;
+            --text-primary: #ffffff; /* TEXTO BRANCO NO MODO ESCURO */
             --text-secondary: #b0b0b0;
             --border: #3a3a3a;
             --shadow: rgba(0, 0, 0, 0.4);
@@ -24,20 +24,17 @@
             --retencao: #ff1744;
             --agendamento: #3a86ff;
 
-            /* Gamificação */
-            --bronze: #cd7f32;
-            --silver: #c0c0c0;
-            --gold: #ffd700;
-            --platinum: #e5e4e2;
-            --diamond: #b9f2ff;
+            /* Comparativo Meta x Resultado */
+            --meta-color: #ff9800;
+            --resultado-color: #4caf50;
         }
 
         [data-theme="light"] {
             --bg-primary: #f8f9fa;
-            --bg-secondary: #b0b0b0;
+            --bg-secondary: #ffffff;
             --bg-tertiary: #f1f3f5;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
+            --text-primary: #000000; /* TEXTO PRETO NO MODO CLARO */
+            --text-secondary: #666666;
             --border: #dee2e6;
             --shadow: rgba(0, 0, 0, 0.1);
         }
@@ -80,7 +77,7 @@
 
         .logo i {
             font-size: 2.2rem;
-            background: linear-gradient(135deg, var(--gold), var(--onboarding));
+            background: linear-gradient(135deg, var(--resultado-color), var(--onboarding));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -307,7 +304,7 @@
         }
 
         .podium-title i {
-            color: var(--gold);
+            color: var(--resultado-color);
         }
 
         .podium {
@@ -338,9 +335,9 @@
             z-index: 10;
         }
 
-        .first { height: 240px; background: linear-gradient(to bottom, var(--gold), #daa520); order: 2; }
-        .second { height: 190px; background: linear-gradient(to bottom, var(--silver), #a8a8a8); order: 1; }
-        .third { height: 160px; background: linear-gradient(to bottom, var(--bronze), #8c5c2c); order: 3; }
+        .first { height: 240px; background: linear-gradient(to bottom, #ffd700, #daa520); order: 2; }
+        .second { height: 190px; background: linear-gradient(to bottom, #c0c0c0, #a8a8a8); order: 1; }
+        .third { height: 160px; background: linear-gradient(to bottom, #cd7f32, #8c5c2c); order: 3; }
 
         .podium-avatar {
             width: 90px;
@@ -582,27 +579,6 @@
             box-shadow: 0 0 0 3px rgba(106, 61, 255, 0.2);
         }
 
-        .badge-selector {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .badge-option {
-            padding: 8px 12px;
-            border-radius: 20px;
-            background: var(--bg-tertiary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-
-        .badge-option:hover, .badge-option.selected {
-            background: var(--onboarding);
-            color: white;
-        }
-
         /* Tabela Responsiva */
         .ranking-table {
             width: 100%;
@@ -646,22 +622,6 @@
         .position-1 { background-color: rgba(255, 215, 0, 0.1); }
         .position-2 { background-color: rgba(192, 192, 192, 0.1); }
         .position-3 { background-color: rgba(205, 127, 50, 0.1); }
-
-        /* Badges de nível */
-        .level-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .level-bronze { background: var(--bronze); color: white; }
-        .level-silver { background: var(--silver); color: black; }
-        .level-gold { background: var(--gold); color: black; }
-        .level-platinum { background: var(--platinum); color: black; }
-        .level-diamond { background: var(--diamond); color: #0077b6; }
 
         /* Histórico de Atividades */
         .activity-log {
@@ -834,14 +794,6 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar colaborador...">
             </div>
-            <select id="filterLevel">
-                <option value="">Todos os Níveis</option>
-                <option value="bronze">Bronze</option>
-                <option value="silver">Prata</option>
-                <option value="gold">Ouro</option>
-                <option value="platinum">Platina</option>
-                <option value="diamond">Diamante</option>
-            </select>
         </div>
 
         <div class="sectors-tabs">
@@ -897,7 +849,8 @@
                             <th>Colaborador</th>
                             <th>Pontuação</th>
                             <th>Métrica</th>
-                            <th>Nível</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -957,7 +910,8 @@
                             <th>Colaborador</th>
                             <th>Pontuação</th>
                             <th>Métrica</th>
-                            <th>Nível</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -1014,7 +968,8 @@
                             <th>Colaborador</th>
                             <th>Pontuação</th>
                             <th>Métrica</th>
-                            <th>Nível</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -1071,7 +1026,8 @@
                             <th>Colaborador</th>
                             <th>Pontuação</th>
                             <th>Métrica</th>
-                            <th>Nível</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -1128,7 +1084,8 @@
                             <th>Colaborador</th>
                             <th>Pontuação</th>
                             <th>Métrica</th>
-                            <th>Nível</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -1193,15 +1150,12 @@
                     <input type="number" id="memberMetric" value="0" min="0" max="100">
                 </div>
                 <div class="form-group">
-                    <label>Badge / Nível:</label>
-                    <div class="badge-selector">
-                        <div class="badge-option" data-level="bronze">Bronze</div>
-                        <div class="badge-option" data-level="silver">Prata</div>
-                        <div class="badge-option" data-level="gold">Ouro</div>
-                        <div class="badge-option" data-level="platinum">Platina</div>
-                        <div class="badge-option" data-level="diamond">Diamante</div>
-                    </div>
-                    <input type="hidden" id="memberLevel" value="bronze">
+                    <label for="memberMeta">Meta (%):</label>
+                    <input type="number" id="memberMeta" value="90" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberResultado">Resultado (%):</label>
+                    <input type="number" id="memberResultado" value="90" min="0" max="100" required>
                 </div>
                 <button type="submit" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 10px;">
                     <i class="fas fa-save"></i> Salvar Colaborador
@@ -1217,44 +1171,44 @@
     </div>
 
     <script>
-        // Dados iniciais com mais informações
+        // Dados iniciais com Meta e Resultado
         let sectors = {
             onboarding: [
-                { id: 1, name: "Ana Silva", role: "Líder de Onboarding", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98, level: "gold", activities: [
+                { id: 1, name: "Ana Silva", role: "Líder de Onboarding", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98, meta: 95, resultado: 98, activities: [
                     { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
                     { action: "Alcançou 98% de sucesso em integrações", date: "2024-05-05T14:20:00" }
                 ]},
-                { id: 2, name: "Carlos Oliveira", role: "Analista Jr", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95, level: "silver", activities: [
+                { id: 2, name: "Carlos Oliveira", role: "Analista Jr", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95, meta: 90, resultado: 95, activities: [
                     { action: "Superou meta mensal", date: "2024-05-03T09:15:00" }
                 ]},
-                { id: 3, name: "Mariana Santos", role: "Especialista Sênior", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93, level: "diamond", activities: [
+                { id: 3, name: "Mariana Santos", role: "Especialista Sênior", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93, meta: 90, resultado: 93, activities: [
                     { action: "Recebeu prêmio de excelência", date: "2024-04-28T16:45:00" },
                     { action: "Mentorou 3 novos colaboradores", date: "2024-05-02T11:30:00" }
                 ]},
-                { id: 4, name: "Ricardo Almeida", role: "Analista Pleno", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91, level: "silver", activities: []},
-                { id: 5, name: "Fernanda Lima", role: "Coordenadora", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90, level: "gold", activities: [
+                { id: 4, name: "Ricardo Almeida", role: "Analista Pleno", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91, meta: 85, resultado: 91, activities: []},
+                { id: 5, name: "Fernanda Lima", role: "Coordenadora", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90, meta: 88, resultado: 90, activities: [
                     { action: "Implementou novo processo de integração", date: "2024-04-30T13:20:00" }
                 ]}
             ],
             ongoing: [
-                { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, level: "platinum", activities: []},
-                { id: 7, name: "Juliana Martins", role: "Especialista em Suporte", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96, level: "gold", activities: []},
-                { id: 8, name: "Roberto Santos", role: "Analista de Suporte", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94, level: "silver", activities: []}
+                { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, meta: 95, resultado: 97, activities: []},
+                { id: 7, name: "Juliana Martins", role: "Especialista em Suporte", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96, meta: 94, resultado: 96, activities: []},
+                { id: 8, name: "Roberto Santos", role: "Analista de Suporte", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94, meta: 90, resultado: 94, activities: []}
             ],
             chat: [
-                { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, level: "diamond", activities: []},
-                { id: 10, name: "Diego Alves", role: "Atendente Sênior", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97, level: "platinum", activities: []},
-                { id: 11, name: "Tatiane Souza", role: "Atendente Pleno", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96, level: "gold", activities: []}
+                { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, meta: 97, resultado: 99, activities: []},
+                { id: 10, name: "Diego Alves", role: "Atendente Sênior", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97, meta: 95, resultado: 97, activities: []},
+                { id: 11, name: "Tatiane Souza", role: "Atendente Pleno", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96, meta: 93, resultado: 96, activities: []}
             ],
             retencao: [
-                { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, level: "diamond", activities: []},
-                { id: 13, name: "Rodrigo Ferreira", role: "Analista de Retenção", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90, level: "platinum", activities: []},
-                { id: 14, name: "Patrícia Silva", role: "Coordenadora de Retenção", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88, level: "gold", activities: []}
+                { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, meta: 90, resultado: 92, activities: []},
+                { id: 13, name: "Rodrigo Ferreira", role: "Analista de Retenção", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90, meta: 88, resultado: 90, activities: []},
+                { id: 14, name: "Patrícia Silva", role: "Coordenadora de Retenção", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88, meta: 85, resultado: 88, activities: []}
             ],
             agendamento: [
-                { id: 15, name: "Felipe Costa", role: "Líder de Agendamento", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95, level: "platinum", activities: []},
-                { id: 16, name: "Larissa Mendes", role: "Analista de Agendamento", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93, level: "gold", activities: []},
-                { id: 17, name: "Gabriel Oliveira", role: "Assistente de Agendamento", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91, level: "silver", activities: []}
+                { id: 15, name: "Felipe Costa", role: "Líder de Agendamento", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95, meta: 93, resultado: 95, activities: []},
+                { id: 16, name: "Larissa Mendes", role: "Analista de Agendamento", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93, meta: 90, resultado: 93, activities: []},
+                { id: 17, name: "Gabriel Oliveira", role: "Assistente de Agendamento", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91, meta: 88, resultado: 91, activities: []}
             ]
         };
 
@@ -1262,7 +1216,6 @@
         const sectorTabs = document.querySelectorAll('.sector-tab');
         const sectorContents = document.querySelectorAll('.sector-content');
         const searchInput = document.getElementById('searchInput');
-        const filterLevel = document.getElementById('filterLevel');
         const themeToggle = document.getElementById('themeToggle');
         const exportBtn = document.getElementById('exportBtn');
         const resetBtn = document.getElementById('resetBtn');
@@ -1362,7 +1315,6 @@
                     <img src="${member.photo}" alt="${member.name}" class="podium-avatar" onerror="this.src='https://via.placeholder.com/200'">
                     <div class="podium-name">${member.name}</div>
                     <div class="podium-score">${member.score} pts</div>
-                    <div class="level-badge level-${member.level}">${member.level.charAt(0).toUpperCase() + member.level.slice(1)}</div>
                 `;
                 container.appendChild(podiumItem);
             });
@@ -1379,6 +1331,8 @@
                     row.classList.add(`position-${index+1}`);
                 }
                 
+                const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
+                
                 row.innerHTML = `
                     <td class="position-cell">${index + 1}</td>
                     <td>
@@ -1392,7 +1346,8 @@
                     </td>
                     <td>${member.score} pts</td>
                     <td>${member.metric}%</td>
-                    <td><span class="level-badge level-${member.level}">${member.level.charAt(0).toUpperCase() + member.level.slice(1)}</span></td>
+                    <td style="color: var(--meta-color); font-weight: 600;">${member.meta}%</td>
+                    <td style="color: var(--resultado-color); font-weight: 700;">${member.resultado}% ${statusIcon}</td>
                     <td>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="number" class="score-input" placeholder="+" style="width: 60px; padding: 6px; text-align: center;" min="1">
@@ -1416,6 +1371,8 @@
                 card.className = 'card';
                 card.style.borderLeftColor = getActiveSectorColor();
                 
+                const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
+                
                 card.innerHTML = `
                     <div class="card-header">
                         <img src="${member.photo}" alt="${member.name}" class="avatar" onerror="this.src='https://via.placeholder.com/70'">
@@ -1435,7 +1392,14 @@
                             <div class="stat-value">${member.metric}%</div>
                         </div>
                     </div>
-                    <div class="level-badge level-${member.level}">${member.level.charAt(0).toUpperCase() + member.level.slice(1)}</div>
+                    <div style="display: flex; gap: 10px; margin: 15px 0 10px; font-size: 0.9rem; flex-wrap: wrap;">
+                        <div style="background: var(--meta-color); color: black; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
+                            Meta: ${member.meta}%
+                        </div>
+                        <div style="background: var(--resultado-color); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
+                            Resultado: ${member.resultado}% ${statusIcon}
+                        </div>
+                    </div>
                     <div class="actions">
                         <input type="number" class="score-input" placeholder="Adicionar pontos" min="1" style="flex: 1; margin-right: 8px;">
                         <button class="btn-small" style="background: #4caf50; flex-shrink: 0;" onclick="addScore('${sector}', ${member.id}, this.previousElementSibling.value)">Adicionar</button>
@@ -1586,22 +1550,10 @@
                     date: new Date().toISOString()
                 });
                 
-                // Atualizar nível se necessário
-                updateMemberLevel(member);
-                
                 saveToLocalStorage();
                 renderRanking(sector);
                 showToast(`${member.name} ganhou ${pointValue} pontos!`);
             }
-        }
-
-        // Atualizar nível do membro baseado na pontuação
-        function updateMemberLevel(member) {
-            if (member.score >= 5000) member.level = 'diamond';
-            else if (member.score >= 3000) member.level = 'platinum';
-            else if (member.score >= 2000) member.level = 'gold';
-            else if (member.score >= 1000) member.level = 'silver';
-            else member.level = 'bronze';
         }
 
         // Editar membro
@@ -1618,15 +1570,8 @@
             document.getElementById('memberPhoto').value = member.photo;
             document.getElementById('memberScore').value = member.score;
             document.getElementById('memberMetric').value = member.metric;
-            document.getElementById('memberLevel').value = member.level;
-            
-            // Marcar badge selecionada
-            document.querySelectorAll('.badge-option').forEach(opt => {
-                opt.classList.remove('selected');
-                if (opt.getAttribute('data-level') === member.level) {
-                    opt.classList.add('selected');
-                }
-            });
+            document.getElementById('memberMeta').value = member.meta;
+            document.getElementById('memberResultado').value = member.resultado;
             
             memberModal.style.display = 'flex';
         }
@@ -1646,7 +1591,6 @@
             document.getElementById('modalTitle').textContent = 'Adicionar Colaborador';
             document.getElementById('memberForm').reset();
             document.getElementById('memberId').value = '';
-            document.getElementById('memberLevel').value = 'bronze';
             
             // Setar setor atual
             const activeTab = document.querySelector('.sector-tab.active');
@@ -1655,12 +1599,6 @@
                 document.getElementById('memberSector').value = sector;
                 document.getElementById('currentSector').value = sector;
             }
-            
-            // Resetar badges
-            document.querySelectorAll('.badge-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.querySelector('.badge-option[data-level="bronze"]').classList.add('selected');
             
             memberModal.style.display = 'flex';
         }
@@ -1693,21 +1631,6 @@
                 renderCards(activeSector, filtered);
             });
             
-            // Filtro por nível
-            filterLevel.addEventListener('change', function() {
-                const levelFilter = this.value;
-                const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
-                let members = [...sectors[activeSector]];
-                
-                if (levelFilter) {
-                    members = members.filter(m => m.level === levelFilter);
-                }
-                
-                members.sort((a, b) => b.score - a.score);
-                renderTable(activeSector, members);
-                renderCards(activeSector, members);
-            });
-            
             // Troca de abas
             sectorTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1720,7 +1643,6 @@
                     
                     // Resetar filtros
                     searchInput.value = '';
-                    filterLevel.value = '';
                     
                     renderRanking(sector);
                 });
@@ -1744,7 +1666,8 @@
                 const photo = document.getElementById('memberPhoto').value.trim() || 'https://via.placeholder.com/200';
                 const score = parseInt(document.getElementById('memberScore').value) || 0;
                 const metric = parseInt(document.getElementById('memberMetric').value) || 0;
-                const level = document.getElementById('memberLevel').value;
+                const meta = parseInt(document.getElementById('memberMeta').value) || 90;
+                const resultado = parseInt(document.getElementById('memberResultado').value) || 90;
                 
                 if (!name || !sector) {
                     showToast('Nome e setor são obrigatórios!', 'error');
@@ -1758,7 +1681,8 @@
                     photo,
                     score,
                     metric,
-                    level,
+                    meta,
+                    resultado,
                     activities: []
                 };
                 
@@ -1777,15 +1701,6 @@
                 saveToLocalStorage();
                 renderRanking(sector);
                 memberModal.style.display = 'none';
-            });
-            
-            // Badge selector
-            document.querySelectorAll('.badge-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.badge-option').forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    document.getElementById('memberLevel').value = this.getAttribute('data-level');
-                });
             });
             
             // Troca de tema
