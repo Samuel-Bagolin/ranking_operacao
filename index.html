@@ -6,11 +6,9 @@
     <title>🏆 Ranking Inteligente por Setores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
-
     <style>
         :root {
             --bg-primary: #121212;
@@ -21,24 +19,20 @@
             --border: #3a3a3a;
             --shadow: rgba(0, 0, 0, 0.4);
             --transition: all 0.3s ease;
-
             /* Setores */
             --onboarding: #6a3dff;
             --ongoing: #00c853;
             --chat: #ffab00;
             --retencao: #ff1744;
             --agendamento: #3a86ff;
-
             /* Comparativo Meta x Resultado */
             --meta-color: #ff9800;
             --resultado-color: #4caf50;
-
             /* Pódio */
             --first-place: #ffd700;
             --second-place: #c0c0c0;
             --third-place: #cd7f32;
         }
-
         [data-theme="light"] {
             --bg-primary: #f8f9fa;
             --bg-secondary: #ffffff;
@@ -51,27 +45,23 @@
             --second-place: #cccccc;
             --third-place: #d3a05f;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary); /* Texto principal sempre adaptativo */
             min-height: 100vh;
             transition: var(--transition);
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
         /* Header Moderno */
         header {
             display: flex;
@@ -81,13 +71,11 @@
             border-bottom: 1px solid var(--border);
             margin-bottom: 30px;
         }
-
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .logo i {
             font-size: 2.2rem;
             background: linear-gradient(135deg, var(--resultado-color), var(--onboarding));
@@ -95,13 +83,11 @@
             background-clip: text;
             color: transparent;
         }
-
         .logo h1 {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
         }
-
         .theme-toggle {
             background: none;
             border: none;
@@ -112,12 +98,10 @@
             border-radius: 50%;
             transition: var(--transition);
         }
-
         .theme-toggle:hover {
             background: var(--bg-tertiary);
             color: var(--text-primary);
         }
-
         /* Controles */
         .controls {
             display: flex;
@@ -126,13 +110,11 @@
             margin-bottom: 25px;
             align-items: center;
         }
-
         .search-box {
             flex: 1;
             min-width: 250px;
             position: relative;
         }
-
         .search-box input {
             width: 100%;
             padding: 12px 16px 12px 40px;
@@ -142,7 +124,6 @@
             color: var(--text-primary);
             font-size: 0.95rem;
         }
-
         .search-box i {
             position: absolute;
             left: 12px;
@@ -150,7 +131,6 @@
             transform: translateY(-50%);
             color: var(--text-secondary);
         }
-
         button {
             display: flex;
             align-items: center;
@@ -164,20 +144,16 @@
             background: var(--onboarding);
             color: white;
         }
-
         button:hover {
             filter: brightness(1.1);
             transform: translateY(-2px);
         }
-
         button.export {
             background: #4caf50;
         }
-
         button.reset {
             background: #f44336;
         }
-
         /* Abas de Setor */
         .sectors-tabs {
             display: flex;
@@ -188,16 +164,13 @@
             overflow-x: auto;
             padding-bottom: 5px;
         }
-
         .sectors-tabs::-webkit-scrollbar {
             height: 4px;
         }
-
         .sectors-tabs::-webkit-scrollbar-thumb {
             background: var(--border);
             border-radius: 4px;
         }
-
         .sector-tab {
             padding: 14px 24px;
             border-radius: 12px;
@@ -212,41 +185,33 @@
             border: 2px solid transparent;
             color: var(--text-primary);
         }
-
         .sector-tab:hover {
             transform: translateY(-3px);
         }
-
         .sector-tab.active {
             border-color: var(--onboarding);
             box-shadow: 0 5px 20px rgba(106, 61, 255, 0.3);
         }
-
         .sector-tab i {
             font-size: 1.1rem;
         }
-
         .onboarding-tab { background: var(--onboarding); color: white; }
         .ongoing-tab { background: var(--ongoing); color: white; }
         .chat-tab { background: var(--chat); color: white; }
         .retencao-tab { background: var(--retencao); color: white; }
         .agendamento-tab { background: var(--agendamento); color: white; }
-
         /* Conteúdo do Setor */
         .sector-content {
             display: none;
             animation: fadeIn 0.5s ease;
         }
-
         .sector-content.active {
             display: block;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .sector-header {
             display: grid;
             grid-template-columns: 100px 1fr auto;
@@ -257,14 +222,12 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px var(--shadow);
         }
-
         @media (max-width: 768px) {
             .sector-header {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
         }
-
         .sector-brasao {
             width: 100px;
             height: 100px;
@@ -277,18 +240,15 @@
             box-shadow: 0 5px 15px var(--shadow);
             color: var(--text-primary);
         }
-
         .sector-info h2 {
             font-size: 1.8rem;
             margin-bottom: 8px;
             color: var(--text-primary);
         }
-
         .sector-info p {
             color: var(--text-secondary);
             font-size: 0.95rem;
         }
-
         .sector-metric {
             background: rgba(106, 61, 255, 0.15);
             padding: 12px 24px;
@@ -298,7 +258,6 @@
             font-size: 0.9rem;
             color: var(--text-primary);
         }
-
         /* Gráfico de desempenho */
         .performance-chart {
             height: 200px;
@@ -307,12 +266,10 @@
             border-radius: 12px;
             padding: 20px;
         }
-
         /* Pódio */
         .podium-section {
             margin: 40px 0;
         }
-
         .podium-title {
             font-size: 1.5rem;
             margin-bottom: 25px;
@@ -321,11 +278,9 @@
             gap: 10px;
             color: var(--text-primary);
         }
-
         .podium-title i {
             color: var(--resultado-color);
         }
-
         .podium {
             display: flex;
             justify-content: center;
@@ -335,7 +290,6 @@
             margin: 0 auto;
             max-width: 800px;
         }
-
         .podium-item {
             text-align: center;
             width: 160px;
@@ -349,30 +303,25 @@
             position: relative;
             box-shadow: 0 4px 12px var(--shadow);
         }
-
         .podium-item:hover {
             transform: translateY(-10px) scale(1.03);
             z-index: 10;
         }
-
         .first { 
             height: 240px; 
             background: linear-gradient(to bottom, var(--first-place), #daa520); 
             order: 2; 
         }
-
         .second { 
             height: 190px; 
-            background: linear-gradient(to bottom, var(--second-place), #a8a8a8); 
+            background: linear-gradient(to bottom, var(--second-place), #a8a88); 
             order: 1; 
         }
-
         .third { 
             height: 160px; 
             background: linear-gradient(to bottom, var(--third-place), #8c5c2c); 
             order: 3; 
         }
-
         .podium-avatar {
             width: 90px;
             height: 90px;
@@ -382,7 +331,6 @@
             margin-bottom: 16px;
             box-shadow: 0 4px 8px var(--shadow);
         }
-
         .podium-name {
             font-weight: 700;
             margin-bottom: 8px;
@@ -390,14 +338,12 @@
             color: var(--text-primary);
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-
         .podium-score {
             font-size: 1.4rem;
             font-weight: 800;
             color: var(--text-primary);
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-
         .podium-rank {
             position: absolute;
             top: 12px;
@@ -412,12 +358,10 @@
             justify-content: center;
             font-weight: bold;
         }
-
         /* Cards de Ranking */
         .ranking-section {
             margin: 40px 0;
         }
-
         .ranking-title {
             font-size: 1.5rem;
             margin-bottom: 25px;
@@ -428,14 +372,12 @@
             gap: 10px;
             color: var(--text-primary);
         }
-
         .ranking-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
         }
-
         .card {
             background: var(--bg-secondary);
             border-radius: 16px;
@@ -446,12 +388,10 @@
             overflow: hidden;
             color: var(--text-primary);
         }
-
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 8px 24px var(--shadow);
         }
-
         .card::before {
             content: '';
             position: absolute;
@@ -461,13 +401,11 @@
             height: 100%;
             background: var(--onboarding);
         }
-
         .card-header {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .avatar {
             width: 70px;
             height: 70px;
@@ -476,19 +414,16 @@
             margin-right: 16px;
             border: 3px solid var(--border);
         }
-
         .member-info h3 {
             font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 4px;
             color: var(--text-primary);
         }
-
         .member-role {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-
         .position-badge {
             background: linear-gradient(135deg, var(--onboarding), var(--agendamento));
             color: white;
@@ -498,45 +433,38 @@
             font-size: 0.9rem;
             margin-left: auto;
         }
-
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin: 20px 0;
         }
-
         .stat-box {
             background: var(--bg-tertiary);
             padding: 16px;
             border-radius: 12px;
             text-align: center;
         }
-
         .stat-label {
             font-size: 0.85rem;
             color: var(--text-secondary);
             margin-bottom: 8px;
         }
-
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
         }
-
         .actions {
             display: flex;
             gap: 10px;
             margin-top: 20px;
         }
-
         .btn-small {
             padding: 8px 16px;
             font-size: 0.85rem;
             border-radius: 6px;
         }
-
         /* Modal */
         .modal {
             display: none;
@@ -551,7 +479,6 @@
             align-items: center;
             backdrop-filter: blur(5px);
         }
-
         .modal-content {
             background: var(--bg-secondary);
             padding: 30px;
@@ -562,12 +489,10 @@
             animation: modalPop 0.3s ease;
             color: var(--text-primary);
         }
-
         @keyframes modalPop {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -576,7 +501,6 @@
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border);
         }
-
         .close {
             background: none;
             border: none;
@@ -586,23 +510,19 @@
             padding: 5px;
             border-radius: 50%;
         }
-
         .close:hover {
             background: var(--bg-tertiary);
             color: var(--text-primary);
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--text-primary);
         }
-
         input, select, textarea {
             width: 100%;
             padding: 14px;
@@ -613,13 +533,11 @@
             font-size: 1rem;
             transition: var(--transition);
         }
-
         input:focus, select:focus {
             outline: none;
             border-color: var(--onboarding);
             box-shadow: 0 0 0 3px rgba(106, 61, 255, 0.2);
         }
-
         /* Tabela Responsiva */
         .ranking-table {
             width: 100%;
@@ -631,14 +549,12 @@
             margin: 30px 0;
             color: var(--text-primary);
         }
-
         .ranking-table th, .ranking-table td {
             padding: 16px;
             text-align: left;
             border-bottom: 1px solid var(--border);
             color: var(--text-primary);
         }
-
         .ranking-table th {
             background: var(--bg-tertiary);
             font-weight: 700;
@@ -647,15 +563,12 @@
             letter-spacing: 0.5px;
             color: var(--text-primary);
         }
-
         .ranking-table tr:last-child td {
             border-bottom: none;
         }
-
         .ranking-table tr:hover {
             background: rgba(106, 61, 255, 0.05);
         }
-
         .position-cell {
             font-weight: 700;
             text-align: center;
@@ -663,11 +576,9 @@
             font-size: 1.1rem;
             color: var(--text-primary);
         }
-
         .position-1 { background-color: rgba(255, 215, 0, 0.1); }
         .position-2 { background-color: rgba(192, 192, 192, 0.1); }
         .position-3 { background-color: rgba(205, 127, 50, 0.1); }
-
         /* Histórico de Atividades */
         .activity-log {
             margin-top: 30px;
@@ -675,13 +586,11 @@
             border-radius: 12px;
             padding: 20px;
         }
-
         .activity-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
             color: var(--text-primary);
         }
-
         .activity-item {
             padding: 12px 0;
             border-bottom: 1px solid var(--border);
@@ -689,11 +598,9 @@
             align-items: center;
             gap: 12px;
         }
-
         .activity-item:last-child {
             border-bottom: none;
         }
-
         .activity-icon {
             width: 36px;
             height: 36px;
@@ -705,39 +612,32 @@
             color: white;
             font-size: 0.9rem;
         }
-
         .activity-content {
             flex: 1;
         }
-
         .activity-text {
             font-weight: 500;
             margin-bottom: 4px;
             color: var(--text-primary);
         }
-
         .activity-time {
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
-
         /* Responsividade */
         @media (max-width: 768px) {
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .search-box {
                 min-width: auto;
             }
-
             .podium {
                 flex-direction: column;
                 height: auto;
                 gap: 15px;
             }
-
             .podium-item {
                 width: 100%;
                 max-width: 300px;
@@ -748,48 +648,38 @@
                 justify-content: flex-start;
                 gap: 15px;
             }
-
             .podium-avatar {
                 width: 70px;
                 height: 70px;
             }
-
             .stats {
                 grid-template-columns: 1fr;
             }
-
             .ranking-container {
                 grid-template-columns: 1fr;
             }
-
             .sector-header {
                 padding: 20px;
             }
         }
-
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
             }
-
             header {
                 padding: 15px 0;
             }
-
             .logo h1 {
                 font-size: 1.5rem;
             }
-
             .sector-tab {
                 padding: 12px 16px;
                 font-size: 0.9rem;
             }
-
             .card {
                 padding: 20px;
             }
         }
-
         /* Toast de notificação */
         .toast {
             position: fixed;
@@ -808,14 +698,50 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
-
         .toast i {
             font-size: 1.2rem;
+        }
+
+        /* ✅ ESTILO PARA KPIs */
+        .kpis-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+        }
+
+        .kpi-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .kpi-item:last-child {
+            border-bottom: none;
+        }
+
+        .kpi-label {
+            font-weight: 600;
+        }
+
+        .kpi-values {
+            display: flex;
+            gap: 15px;
+        }
+
+        .kpi-meta {
+            color: var(--meta-color);
+            font-weight: 600;
+        }
+
+        .kpi-realizado {
+            color: var(--resultado-color);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -835,14 +761,12 @@
                 </button>
             </div>
         </header>
-
         <div class="controls">
             <div class="search-box">
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar colaborador...">
             </div>
         </div>
-
         <div class="sectors-tabs">
             <div class="sector-tab onboarding-tab active" data-sector="onboarding">
                 <i class="fas fa-user-plus"></i> Onboarding
@@ -860,7 +784,6 @@
                 <i class="fas fa-calendar-check"></i> Agendamento
             </div>
         </div>
-
         <!-- Conteúdo do Setor Onboarding -->
         <div class="sector-content active" id="onboarding-content">
             <div class="sector-header">
@@ -875,18 +798,15 @@
                     Métrica: Taxa de Sucesso na Integração
                 </div>
             </div>
-
             <div class="performance-chart">
                 <canvas id="onboardingChart"></canvas>
             </div>
-
             <div class="podium-section">
                 <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="onboarding-podium">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-list-ol"></i> Ranking Completo</h2>
                 <table class="ranking-table">
@@ -906,14 +826,12 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-users"></i> Equipe</h2>
                 <div class="ranking-container" id="onboarding-ranking">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="activity-log">
                 <h3 class="activity-title">Histórico de Atividades</h3>
                 <div id="onboarding-activity-log">
@@ -921,7 +839,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Conteúdo Ongoing -->
         <div class="sector-content" id="ongoing-content">
             <div class="sector-header">
@@ -936,18 +853,15 @@
                     Métrica: Resolução no Primeiro Contato
                 </div>
             </div>
-
             <div class="performance-chart">
                 <canvas id="ongoingChart"></canvas>
             </div>
-
             <div class="podium-section">
                 <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="ongoing-podium">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-list-ol"></i> Ranking Completo</h2>
                 <table class="ranking-table">
@@ -967,11 +881,9 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="ranking-container" id="ongoing-ranking">
                 <!-- Gerado por JS -->
             </div>
-
             <div class="activity-log">
                 <h3 class="activity-title">Histórico de Atividades</h3>
                 <div id="ongoing-activity-log">
@@ -979,7 +891,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Conteúdo Chat -->
         <div class="sector-content" id="chat-content">
             <div class="sector-header">
@@ -994,18 +905,15 @@
                     Métrica: Satisfação do Cliente (NPS)
                 </div>
             </div>
-
             <div class="performance-chart">
                 <canvas id="chatChart"></canvas>
             </div>
-
             <div class="podium-section">
                 <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="chat-podium">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-list-ol"></i> Ranking Completo</h2>
                 <table class="ranking-table">
@@ -1025,11 +933,9 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="ranking-container" id="chat-ranking">
                 <!-- Gerado por JS -->
             </div>
-
             <div class="activity-log">
                 <h3 class="activity-title">Histórico de Atividades</h3>
                 <div id="chat-activity-log">
@@ -1037,7 +943,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Conteúdo Retenção -->
         <div class="sector-content" id="retencao-content">
             <div class="sector-header">
@@ -1052,18 +957,15 @@
                     Métrica: Taxa de Retenção
                 </div>
             </div>
-
             <div class="performance-chart">
                 <canvas id="retencaoChart"></canvas>
             </div>
-
             <div class="podium-section">
                 <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="retencao-podium">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-list-ol"></i> Ranking Completo</h2>
                 <table class="ranking-table">
@@ -1083,11 +985,9 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="ranking-container" id="retencao-ranking">
                 <!-- Gerado por JS -->
             </div>
-
             <div class="activity-log">
                 <h3 class="activity-title">Histórico de Atividades</h3>
                 <div id="retencao-activity-log">
@@ -1095,7 +995,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Conteúdo Agendamento -->
         <div class="sector-content" id="agendamento-content">
             <div class="sector-header">
@@ -1110,18 +1009,15 @@
                     Métrica: Taxa de Conversão de Agendamentos
                 </div>
             </div>
-
             <div class="performance-chart">
                 <canvas id="agendamentoChart"></canvas>
             </div>
-
             <div class="podium-section">
                 <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="agendamento-podium">
                     <!-- Gerado por JS -->
                 </div>
             </div>
-
             <div class="ranking-section">
                 <h2 class="ranking-title"><i class="fas fa-list-ol"></i> Ranking Completo</h2>
                 <table class="ranking-table">
@@ -1141,11 +1037,9 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="ranking-container" id="agendamento-ranking">
                 <!-- Gerado por JS -->
             </div>
-
             <div class="activity-log">
                 <h3 class="activity-title">Histórico de Atividades</h3>
                 <div id="agendamento-activity-log">
@@ -1154,7 +1048,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal -->
     <div class="modal" id="memberModal">
         <div class="modal-content">
@@ -1204,19 +1097,21 @@
                     <label for="memberResultado">Resultado (%):</label>
                     <input type="number" id="memberResultado" value="90" min="0" max="100" required>
                 </div>
+
+                <!-- ✅ CAMPOS DINÂMICOS DE KPIs -->
+                <div id="dynamicKpis"></div>
+
                 <button type="submit" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 10px;">
                     <i class="fas fa-save"></i> Salvar Colaborador
                 </button>
             </form>
         </div>
     </div>
-
     <!-- Toast de notificação -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toastMessage">Operação realizada com sucesso!</span>
     </div>
-
     <script>
         // 🔥 INICIALIZAR FIREBASE
         const firebaseConfig = {
@@ -1228,13 +1123,58 @@
           messagingSenderId: "212721253021",
           appId: "1:212721253021:web:173e0ac624ee1bb2837274"
         };
-
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const dbRef = database.ref('sectors');
 
-        // Dados iniciais com Meta e Resultado
+        // ✅ INDICADORES POR SETOR
+        const sectorKpis = {
+            agendamento: [
+                { key: "tempo_primeiro_atendimento", label: "Tempo de 1º Atendimento" },
+                { key: "bases_recebidas", label: "Bases recebidas" },
+                { key: "clientes_agendados", label: "Clientes agendados" },
+                { key: "efetividade", label: "Efetividade" },
+                { key: "taxa_no_show", label: "Taxa de No Show" }
+            ],
+            onboarding: [
+                { key: "clientes_ativos", label: "Clientes Ativos" },
+                { key: "clientes_migrados", label: "Clientes migrados" },
+                { key: "carteira_concluida", label: "% carteira concluída" },
+                { key: "csat_medio", label: "CSAT médio" },
+                { key: "total_avaliacao", label: "Total de Avaliação" },
+                { key: "tempo_medio_migracao", label: "Tempo médio de migração (dias)" },
+                { key: "clientes_sem_homologacao", label: "Clientes sem homologação (qtde)" },
+                { key: "cancelamentos", label: "Cancelamentos" },
+                { key: "churn", label: "Churn" }
+            ],
+            ongoing: [
+                { key: "clientes_ativos_carteira", label: "Clientes ativos na carteira" },
+                { key: "clientes_engajados", label: "Clientes engajados" },
+                { key: "engajamento", label: "% engajamento" },
+                { key: "csat_medio", label: "CSAT médio" },
+                { key: "total_avaliacao", label: "Total de Avaliação" },
+                { key: "cancelamentos", label: "Cancelamentos" },
+                { key: "clientes_risco", label: "Clientes em risco (qtde)" }
+            ],
+            chat: [
+                { key: "total_atendimentos", label: "Total de atendimentos" },
+                { key: "sla_primeira_resposta", label: "SLA de 1° resposta (minutos)" },
+                { key: "csat", label: "CSAT" },
+                { key: "total_avaliacao", label: "Total de Avaliação" },
+                { key: "atendimentos_reincidentes", label: "Atendimentos reincidentes" }
+            ],
+            retencao: [
+                { key: "quantidade_solicitacoes", label: "Quantidade de Solicitações" },
+                { key: "reunioes_realizadas", label: "Reuniões realizadas" },
+                { key: "taxa_retencao", label: "Taxa de retenção (%)" },
+                { key: "motivo_cancelamento", label: "Motivo de cancelamento mais comum" },
+                { key: "casos_revertidos", label: "Casos revertidos com sucesso" },
+                { key: "bonificacoes_feitas", label: "Bonificações Feitas" }
+            ]
+        };
+
+        // Dados iniciais com Meta e Resultado + KPIs
         let sectors = {
             onboarding: [],
             ongoing: [],
@@ -1256,6 +1196,7 @@
         const closeModal = document.getElementById('closeModal');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
+        const dynamicKpis = document.getElementById('dynamicKpis');
 
         // Charts
         const charts = {};
@@ -1268,7 +1209,6 @@
                     if (data) {
                         sectors = data;
                     } else {
-                        // Se não houver dados, inicializar com dados padrão
                         initializeDefaultData();
                     }
                     resolve();
@@ -1288,61 +1228,106 @@
                 });
         }
 
-        // Inicializar dados padrão (apenas se banco estiver vazio)
+        // ✅ Inicializar dados padrão com KPIs
         function initializeDefaultData() {
             sectors = {
                 onboarding: [
-                    { id: 1, name: "Ana Silva", role: "Líder de Onboarding", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98, meta: 95, resultado: 98, activities: [
-                        { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
-                        { action: "Alcançou 98% de sucesso em integrações", date: "2024-05-05T14:20:00" }
-                    ]},
-                    { id: 2, name: "Carlos Oliveira", role: "Analista Jr", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95, meta: 90, resultado: 95, activities: [
-                        { action: "Superou meta mensal", date: "2024-05-03T09:15:00" }
-                    ]},
-                    { id: 3, name: "Mariana Santos", role: "Especialista Sênior", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93, meta: 90, resultado: 93, activities: [
-                        { action: "Recebeu prêmio de excelência", date: "2024-04-28T16:45:00" },
-                        { action: "Mentorou 3 novos colaboradores", date: "2024-05-02T11:30:00" }
-                    ]},
-                    { id: 4, name: "Ricardo Almeida", role: "Analista Pleno", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91, meta: 85, resultado: 91, activities: []},
-                    { id: 5, name: "Fernanda Lima", role: "Coordenadora", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90, meta: 88, resultado: 90, activities: [
-                        { action: "Implementou novo processo de integração", date: "2024-04-30T13:20:00" }
-                    ]}
-                ],
-                ongoing: [
-                    { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, meta: 95, resultado: 97, activities: []},
-                    { id: 7, name: "Juliana Martins", role: "Especialista em Suporte", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96, meta: 94, resultado: 96, activities: []},
-                    { id: 8, name: "Roberto Santos", role: "Analista de Suporte", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94, meta: 90, resultado: 94, activities: []}
-                ],
-                chat: [
-                    { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, meta: 97, resultado: 99, activities: []},
-                    { id: 10, name: "Diego Alves", role: "Atendente Sênior", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97, meta: 95, resultado: 97, activities: []},
-                    { id: 11, name: "Tatiane Souza", role: "Atendente Pleno", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96, meta: 93, resultado: 96, activities: []}
-                ],
-                retencao: [
-                    { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, meta: 90, resultado: 92, activities: []},
-                    { id: 13, name: "Rodrigo Ferreira", role: "Analista de Retenção", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90, meta: 88, resultado: 90, activities: []},
-                    { id: 14, name: "Patrícia Silva", role: "Coordenadora de Retenção", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88, meta: 85, resultado: 88, activities: []}
+                    {
+                        id: 1,
+                        name: "Ana Silva",
+                        role: "Líder de Onboarding",
+                        photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80",
+                        score: 2450,
+                        metric: 98,
+                        meta: 95,
+                        resultado: 98,
+                        kpis: {
+                            clientes_ativos: { meta: 200, realizado: 215 },
+                            clientes_migrados: { meta: 180, realizado: 192 },
+                            carteira_concluida: { meta: 90, realizado: 98 },
+                            csat_medio: { meta: 4.5, realizado: 4.8 },
+                            total_avaliacao: { meta: 150, realizado: 167 },
+                            tempo_medio_migracao: { meta: 3, realizado: 2.5 },
+                            clientes_sem_homologacao: { meta: 10, realizado: 3 },
+                            cancelamentos: { meta: 5, realizado: 2 },
+                            churn: { meta: 2, realizado: 0.9 }
+                        },
+                        activities: [
+                            { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
+                            { action: "Alcançou 98% de sucesso em integrações", date: "2024-05-05T14:20:00" }
+                        ]
+                    }
                 ],
                 agendamento: [
-                    { id: 15, name: "Felipe Costa", role: "Líder de Agendamento", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95, meta: 93, resultado: 95, activities: []},
-                    { id: 16, name: "Larissa Mendes", role: "Analista de Agendamento", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93, meta: 90, resultado: 93, activities: []},
-                    { id: 17, name: "Gabriel Oliveira", role: "Assistente de Agendamento", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91, meta: 88, resultado: 91, activities: []}
+                    {
+                        id: 15,
+                        name: "Felipe Costa",
+                        role: "Líder de Agendamento",
+                        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80",
+                        score: 2750,
+                        metric: 95,
+                        meta: 93,
+                        resultado: 95,
+                        kpis: {
+                            tempo_primeiro_atendimento: { meta: 5, realizado: 4.2 },
+                            bases_recebidas: { meta: 120, realizado: 135 },
+                            clientes_agendados: { meta: 90, realizado: 98 },
+                            efetividade: { meta: 85, realizado: 93 },
+                            taxa_no_show: { meta: 15, realizado: 7 }
+                        },
+                        activities: []
+                    }
+                ],
+                ongoing: [
+                    { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, meta: 95, resultado: 97, kpis: {}, activities: []}
+                ],
+                chat: [
+                    { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, meta: 97, resultado: 99, kpis: {}, activities: []}
+                ],
+                retencao: [
+                    { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, meta: 90, resultado: 92, kpis: {}, activities: []}
                 ]
             };
-            saveToFirebase(); // Salvar dados iniciais
+            saveToFirebase();
+        }
+
+        // ✅ Renderizar KPIs no Card
+        function renderKpisInCard(sector, kpis, cardElement) {
+            if (!kpis || Object.keys(kpis).length === 0) return;
+
+            const kpisSection = document.createElement('div');
+            kpisSection.className = 'kpis-section';
+            kpisSection.innerHTML = '<h4 style="margin-bottom: 15px; color: var(--text-primary);">📊 Indicadores</h4>';
+
+            sectorKpis[sector]?.forEach(kpiDef => {
+                const kpi = kpis[kpiDef.key];
+                if (!kpi) return;
+
+                const kpiItem = document.createElement('div');
+                kpiItem.className = 'kpi-item';
+                const statusIcon = kpi.realizado >= kpi.meta ? '✅' : '⚠️';
+                kpiItem.innerHTML = `
+                    <div class="kpi-label">${kpiDef.label}</div>
+                    <div class="kpi-values">
+                        <div class="kpi-meta">Meta: ${kpi.meta}</div>
+                        <div class="kpi-realizado">Real: ${kpi.realizado} ${statusIcon}</div>
+                    </div>
+                `;
+                kpisSection.appendChild(kpiItem);
+            });
+
+            cardElement.appendChild(kpisSection);
         }
 
         // Mostrar toast
         function showToast(message, type = 'success') {
             toastMessage.textContent = message;
             toast.className = 'toast show';
-            
             if (type === 'error') {
                 toast.style.background = '#f44336';
             } else {
                 toast.style.background = getActiveSectorColor();
             }
-            
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
@@ -1352,7 +1337,6 @@
         function getActiveSectorColor() {
             const activeTab = document.querySelector('.sector-tab.active');
             if (!activeTab) return '#6a3dff';
-            
             const sector = activeTab.getAttribute('data-sector');
             const colors = {
                 onboarding: '#6a3dff',
@@ -1368,20 +1352,10 @@
         function renderRanking(sector) {
             const members = [...sectors[sector]];
             members.sort((a, b) => b.score - a.score);
-
-            // Renderizar pódio
             renderPodium(sector, members.slice(0, 3));
-            
-            // Renderizar tabela
             renderTable(sector, members);
-            
-            // Renderizar cards
             renderCards(sector, members);
-            
-            // Renderizar atividades
             renderActivities(sector, members);
-            
-            // Renderizar gráfico
             renderChart(sector, members);
         }
 
@@ -1389,10 +1363,8 @@
         function renderPodium(sector, topMembers) {
             const container = document.getElementById(`${sector}-podium`);
             container.innerHTML = '';
-            
             const positions = ['second', 'first', 'third'];
             const positionNumbers = [2, 1, 3];
-            
             topMembers.forEach((member, index) => {
                 const podiumItem = document.createElement('div');
                 podiumItem.className = `podium-item ${positions[index]}`;
@@ -1410,15 +1382,12 @@
         function renderTable(sector, members) {
             const tableBody = document.getElementById(`${sector}-table-body`);
             tableBody.innerHTML = '';
-            
             members.forEach((member, index) => {
                 const row = document.createElement('tr');
                 if (index < 3) {
                     row.classList.add(`position-${index+1}`);
                 }
-                
                 const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
-                
                 row.innerHTML = `
                     <td class="position-cell">${index + 1}</td>
                     <td>
@@ -1447,18 +1416,15 @@
             });
         }
 
-        // Renderizar cards
+        // ✅ Renderizar cards (com KPIs)
         function renderCards(sector, members) {
             const container = document.getElementById(`${sector}-ranking`);
             container.innerHTML = '';
-            
             members.forEach((member, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.style.borderLeftColor = getActiveSectorColor();
-                
                 const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
-                
                 card.innerHTML = `
                     <div class="card-header">
                         <img src="${member.photo}" alt="${member.name}" class="avatar" onerror="this.src='https://via.placeholder.com/70'">
@@ -1492,6 +1458,8 @@
                         <button class="btn-small" style="background: #2196f3;" onclick="editMember(${member.id}, '${sector}')">Editar</button>
                     </div>
                 `;
+                // ✅ Renderizar KPIs no card
+                renderKpisInCard(sector, member.kpis, card);
                 container.appendChild(card);
             });
         }
@@ -1500,8 +1468,6 @@
         function renderActivities(sector, members) {
             const container = document.getElementById(`${sector}-activity-log`);
             container.innerHTML = '';
-            
-            // Coletar todas as atividades
             let allActivities = [];
             members.forEach(member => {
                 if (member.activities && member.activities.length > 0) {
@@ -1514,23 +1480,16 @@
                     });
                 }
             });
-            
-            // Ordenar por data (mais recente primeiro)
             allActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
             if (allActivities.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Nenhuma atividade registrada</div>';
                 return;
             }
-            
-            // Mostrar últimas 5 atividades
             allActivities.slice(0, 5).forEach(activity => {
                 const item = document.createElement('div');
                 item.className = 'activity-item';
-                
                 const date = new Date(activity.date);
                 const formattedDate = `${date.getDate()}/${date.getMonth() + 1} às ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                
                 item.innerHTML = `
                     <div class="activity-icon">
                         <i class="fas fa-star"></i>
@@ -1547,17 +1506,12 @@
         // Renderizar gráfico
         function renderChart(sector, members) {
             const ctx = document.getElementById(`${sector}Chart`).getContext('2d');
-            
-            // Destruir gráfico anterior se existir
             if (charts[sector]) {
                 charts[sector].destroy();
             }
-            
-            // Pegar top 5 membros
             const topMembers = members.slice(0, 5);
             const labels = topMembers.map(m => m.name.length > 15 ? m.name.substring(0, 12) + '...' : m.name);
             const scores = topMembers.map(m => m.score);
-            
             charts[sector] = new Chart(ctx, {
                 type: 'bar',
                  {
@@ -1601,7 +1555,7 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: 'var(--text-primary)', // ✅ TEXTO BRANCO NO EIXO Y
+                                color: 'var(--text-primary)',
                                 font: {
                                     size: 12
                                 }
@@ -1612,7 +1566,7 @@
                                 display: false
                             },
                             ticks: {
-                                color: 'var(--text-primary)', // ✅ TEXTO BRANCO NO EIXO X
+                                color: 'var(--text-primary)',
                                 font: {
                                     size: 12
                                 },
@@ -1632,29 +1586,24 @@
                 showToast('Por favor, insira um valor válido maior que zero', 'error');
                 return;
             }
-            
             const member = sectors[sector].find(m => m.id === id);
             if (member) {
                 member.score += pointValue;
-                
-                // Adicionar atividade
                 if (!member.activities) member.activities = [];
                 member.activities.unshift({
                     action: `Ganhou ${pointValue} pontos`,
                     date: new Date().toISOString()
                 });
-                
                 saveToFirebase();
                 renderRanking(sector);
                 showToast(`${member.name} ganhou ${pointValue} pontos!`);
             }
         }
 
-        // Editar membro
+        // ✅ Editar membro (com KPIs)
         function editMember(id, sector) {
             const member = sectors[sector].find(m => m.id === id);
             if (!member) return;
-            
             document.getElementById('modalTitle').textContent = 'Editar Colaborador';
             document.getElementById('memberId').value = id;
             document.getElementById('currentSector').value = sector;
@@ -1666,8 +1615,34 @@
             document.getElementById('memberMetric').value = member.metric;
             document.getElementById('memberMeta').value = member.meta;
             document.getElementById('memberResultado').value = member.resultado;
-            
+
+            // ✅ Preencher campos de KPIs
+            updateKpiFields(sector, member.kpis);
+
             memberModal.style.display = 'flex';
+        }
+
+        // ✅ Atualizar campos de KPI no modal
+        function updateKpiFields(sector, kpis = {}) {
+            dynamicKpis.innerHTML = '<h3 style="margin: 20px 0 10px; color: var(--text-primary);">📊 Indicadores do Setor</h3>';
+            sectorKpis[sector]?.forEach(kpi => {
+                const kpiData = kpis[kpi.key] || { meta: 0, realizado: 0 };
+                dynamicKpis.innerHTML += `
+                    <div style="margin-bottom: 15px; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;">
+                        <h4 style="margin-bottom: 10px; color: var(--text-primary);">${kpi.label}</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Meta</label>
+                                <input type="number" class="kpi-input" data-kpi="${kpi.key}" data-type="meta" value="${kpiData.meta}" step="0.1" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Realizado</label>
+                                <input type="number" class="kpi-input" data-kpi="${kpi.key}" data-type="realizado" value="${kpiData.realizado}" step="0.1" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         // Deletar membro
@@ -1685,15 +1660,13 @@
             document.getElementById('modalTitle').textContent = 'Adicionar Colaborador';
             document.getElementById('memberForm').reset();
             document.getElementById('memberId').value = '';
-            
-            // Setar setor atual
             const activeTab = document.querySelector('.sector-tab.active');
             if (activeTab) {
                 const sector = activeTab.getAttribute('data-sector');
                 document.getElementById('memberSector').value = sector;
                 document.getElementById('currentSector').value = sector;
+                updateKpiFields(sector); // ✅ Mostrar campos de KPI
             }
-            
             memberModal.style.display = 'flex';
         }
 
@@ -1721,51 +1694,44 @@
                 document.body.setAttribute('data-theme', 'light');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
-            
+
             // Filtro de busca
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                 const members = [...sectors[activeSector]];
-                
                 const filtered = members.filter(m => 
                     m.name.toLowerCase().includes(searchTerm) || 
                     (m.role && m.role.toLowerCase().includes(searchTerm))
                 );
-                
                 filtered.sort((a, b) => b.score - a.score);
                 renderTable(activeSector, filtered);
                 renderCards(activeSector, filtered);
             });
-            
+
             // Troca de abas
             sectorTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     sectorTabs.forEach(t => t.classList.remove('active'));
                     sectorContents.forEach(c => c.classList.remove('active'));
-                    
                     tab.classList.add('active');
                     const sector = tab.getAttribute('data-sector');
                     document.getElementById(`${sector}-content`).classList.add('active');
-                    
-                    // Resetar filtros
                     searchInput.value = '';
-                    
                     renderRanking(sector);
                 });
             });
-            
+
             // Modal
             addMemberBtn.addEventListener('click', openMemberModal);
             closeModal.addEventListener('click', () => memberModal.style.display = 'none');
             window.addEventListener('click', (e) => {
                 if (e.target === memberModal) memberModal.style.display = 'none';
             });
-            
-            // Formulário
+
+            // ✅ Formulário (com KPIs)
             memberForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
                 const id = document.getElementById('memberId').value;
                 const name = document.getElementById('memberName').value.trim();
                 const role = document.getElementById('memberRole').value.trim();
@@ -1775,12 +1741,21 @@
                 const metric = parseInt(document.getElementById('memberMetric').value) || 0;
                 const meta = parseInt(document.getElementById('memberMeta').value) || 90;
                 const resultado = parseInt(document.getElementById('memberResultado').value) || 90;
-                
+
+                // ✅ Coletar KPIs
+                const kpis = {};
+                document.querySelectorAll('.kpi-input').forEach(input => {
+                    const kpiKey = input.getAttribute('data-kpi');
+                    const kpiType = input.getAttribute('data-type');
+                    if (!kpis[kpiKey]) kpis[kpiKey] = {};
+                    kpis[kpiKey][kpiType] = parseFloat(input.value) || 0;
+                });
+
                 if (!name || !sector) {
                     showToast('Nome e setor são obrigatórios!', 'error');
                     return;
                 }
-                
+
                 const newMember = {
                     id: id ? parseInt(id) : Date.now(),
                     name,
@@ -1790,26 +1765,22 @@
                     metric,
                     meta,
                     resultado,
+                    kpis,
                     activities: []
                 };
-                
+
                 if (id) {
-                    // Editar
                     const oldSector = document.getElementById('currentSector').value;
                     sectors[oldSector] = sectors[oldSector].filter(m => m.id !== parseInt(id));
-                    sectors[sector].push(newMember);
-                    showToast('Colaborador atualizado com sucesso!');
-                } else {
-                    // Adicionar
-                    sectors[sector].push(newMember);
-                    showToast('Novo colaborador adicionado com sucesso!');
                 }
-                
+                sectors[sector].push(newMember);
+
                 saveToFirebase();
                 renderRanking(sector);
                 memberModal.style.display = 'none';
+                showToast(id ? 'Colaborador atualizado!' : 'Novo colaborador adicionado!');
             });
-            
+
             // Troca de tema
             themeToggle.addEventListener('click', function() {
                 if (document.body.getAttribute('data-theme') === 'light') {
@@ -1822,23 +1793,20 @@
                     this.innerHTML = '<i class="fas fa-sun"></i>';
                 }
             });
-            
+
             // Exportar dados
             exportBtn.addEventListener('click', function() {
                 const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                 const dataStr = JSON.stringify(sectors[activeSector], null, 2);
                 const dataUri = 'application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
                 const exportFileDefaultName = `ranking-${activeSector}-${new Date().toISOString().slice(0,10)}.json`;
-                
                 const linkElement = document.createElement('a');
                 linkElement.setAttribute('href', dataUri);
                 linkElement.setAttribute('download', exportFileDefaultName);
                 linkElement.click();
-                
                 showToast('Dados exportados com sucesso!');
             });
-            
+
             // Resetar dados
             resetBtn.addEventListener('click', function() {
                 if (confirm('Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita!')) {
@@ -1846,11 +1814,15 @@
                         onboarding: [], ongoing: [], chat: [], retencao: [], agendamento: []
                     };
                     saveToFirebase();
-                    
                     const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                     renderRanking(activeSector);
                     showToast('Todos os dados foram resetados!');
                 }
+            });
+
+            // ✅ Atualizar KPIs quando mudar setor no modal
+            document.getElementById('memberSector').addEventListener('change', function() {
+                updateKpiFields(this.value);
             });
         });
     </script>
