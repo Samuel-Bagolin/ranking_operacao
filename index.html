@@ -63,20 +63,16 @@
         .logo h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); }
         .logo i { font-size: 2.2rem; background: linear-gradient(135deg, var(--resultado-color), var(--onboarding)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-        .theme-toggle, button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
         button {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
             background: var(--onboarding);
             color: white;
         }
@@ -463,7 +459,7 @@
             </div>
         </div>
 
-        <!-- Conteúdo de cada setor (ex: Onboarding) -->
+        <!-- Onboarding -->
         <div class="sector-content active" id="onboarding-content">
             <div class="sector-header">
                 <div class="sector-brasao">
@@ -511,7 +507,7 @@
             </div>
         </div>
 
-        <!-- Repetir estrutura para outros setores (simplificado por brevidade) -->
+        <!-- Ongoing -->
         <div class="sector-content" id="ongoing-content">
             <div class="sector-header">
                 <div class="sector-brasao">
@@ -531,6 +527,7 @@
             <div class="ranking-container" id="ongoing-ranking"></div>
         </div>
 
+        <!-- Chat -->
         <div class="sector-content" id="chat-content">
             <div class="sector-header">
                 <div class="sector-brasao">
@@ -550,6 +547,7 @@
             <div class="ranking-container" id="chat-ranking"></div>
         </div>
 
+        <!-- Retenção -->
         <div class="sector-content" id="retencao-content">
             <div class="sector-header">
                 <div class="sector-brasao">
@@ -569,6 +567,7 @@
             <div class="ranking-container" id="retencao-ranking"></div>
         </div>
 
+        <!-- Agendamento -->
         <div class="sector-content" id="agendamento-content">
             <div class="sector-header">
                 <div class="sector-brasao">
@@ -609,7 +608,7 @@
                 </div>
                 <div class="form-group">
                     <label for="memberSector">Setor:</label>
-                    <select id="memberSector" required>
+                    <select id="memberSector" required onchange="updateKpiFields(this.value)">
                         <option value="">Selecione um setor</option>
                         <option value="onboarding">Onboarding</option>
                         <option value="ongoing">Ongoing</option>
@@ -639,7 +638,7 @@
                     <input type="number" id="memberResultado" value="90" min="0" max="100" required>
                 </div>
 
-                <!-- INDICADORES DINÂMICOS POR SETOR -->
+                <!-- KPIs Dinâmicos -->
                 <div id="dynamicKpis"></div>
 
                 <button type="submit" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 10px;">
@@ -656,7 +655,7 @@
     </div>
 
     <script>
-        // 🔥 FIREBASE CONFIG
+        // 🔥 FIREBASE
         const firebaseConfig = {
           apiKey: "AIzaSyDUIGP2oxXRedgBTJNqsOu7zh2SXlHulHM",
           authDomain: "rankingsetores.firebaseapp.com",
@@ -719,107 +718,92 @@
 
         // 💡 DADOS INICIAIS
         let sectors = {
-            onboarding: [],
+            onboarding: [
+                {
+                    id: 1,
+                    name: "Ana Silva",
+                    role: "Líder de Onboarding",
+                    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+                    score: 2450,
+                    metric: 98,
+                    meta: 95,
+                    resultado: 98,
+                    kpis: {
+                        clientes_ativos: { meta: 200, realizado: 215 },
+                        clientes_migrados: { meta: 180, realizado: 192 },
+                        carteira_concluida: { meta: 90, realizado: 98 },
+                        csat_medio: { meta: 4.5, realizado: 4.8 },
+                        total_avaliacao: { meta: 150, realizado: 167 },
+                        tempo_medio_migracao: { meta: 3, realizado: 2.5 },
+                        clientes_sem_homologacao: { meta: 10, realizado: 3 },
+                        cancelamentos: { meta: 5, realizado: 2 },
+                        churn: { meta: 2, realizado: 0.9 }
+                    },
+                    activities: []
+                }
+            ],
             ongoing: [],
             chat: [],
             retencao: [],
-            agendamento: []
+            agendamento: [
+                {
+                    id: 101,
+                    name: "Larissa Mendes",
+                    role: "Analista de Agendamento",
+                    photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=200",
+                    score: 2580,
+                    metric: 93,
+                    meta: 90,
+                    resultado: 93,
+                    kpis: {
+                        tempo_primeiro_atendimento: { meta: 5, realizado: 4.2 },
+                        bases_recebidas: { meta: 120, realizado: 135 },
+                        clientes_agendados: { meta: 90, realizado: 98 },
+                        efetividade: { meta: 85, realizado: 93 },
+                        taxa_no_show: { meta: 15, realizado: 7 }
+                    },
+                    activities: []
+                }
+            ]
         };
 
-        // DOM Elements
-        const sectorTabs = document.querySelectorAll('.sector-tab');
-        const sectorContents = document.querySelectorAll('.sector-content');
-        const searchInput = document.getElementById('searchInput');
-        const themeToggle = document.getElementById('themeToggle');
-        const exportBtn = document.getElementById('exportBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const addMemberBtn = document.getElementById('addMemberBtn');
-        const memberModal = document.getElementById('memberModal');
-        const memberForm = document.getElementById('memberForm');
-        const closeModal = document.getElementById('closeModal');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        const dynamicKpis = document.getElementById('dynamicKpis');
+        // 🧩 RENDERIZAR KPIs no Modal
+        function updateKpiFields(sector) {
+            const container = document.getElementById('dynamicKpis');
+            if (!sector) {
+                container.innerHTML = '';
+                return;
+            }
 
-        const charts = {};
+            container.innerHTML = '<h3 style="margin: 20px 0 10px; color: var(--text-primary);">📊 Indicadores do Setor</h3>';
 
-        // 🔁 CARREGAR DO FIREBASE
-        function loadFromFirebase() {
-            return new Promise((resolve) => {
-                dbRef.once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        sectors = data;
-                    } else {
-                        initializeDefaultData();
-                    }
-                    resolve();
-                });
+            const currentKpis = {};
+            const memberId = document.getElementById('memberId').value;
+            if (memberId) {
+                const member = sectors[sector]?.find(m => m.id == memberId);
+                if (member && member.kpis) {
+                    Object.assign(currentKpis, member.kpis);
+                }
+            }
+
+            sectorKpis[sector]?.forEach(kpi => {
+                const data = currentKpis[kpi.key] || { meta: 0, realizado: 0 };
+                container.innerHTML += `
+                    <div style="margin-bottom: 15px; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;">
+                        <h4 style="margin-bottom: 10px; color: var(--text-primary);">${kpi.label}</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Meta</label>
+                                <input type="number" name="kpi_${kpi.key}_meta" value="${data.meta}" step="0.1" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Realizado</label>
+                                <input type="number" name="kpi_${kpi.key}_realizado" value="${data.realizado}" step="0.1" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
-        }
-
-        // 💾 SALVAR NO FIREBASE
-        function saveToFirebase() {
-            dbRef.set(sectors)
-                .then(() => console.log("✅ Dados salvos no Firebase"))
-                .catch(error => {
-                    console.error("❌ Erro ao salvar: ", error);
-                    showToast("Erro ao salvar dados", 'error');
-                });
-        }
-
-        // 🧩 DADOS PADRÃO
-        function initializeDefaultData() {
-            sectors = {
-                agendamento: [
-                    {
-                        id: 101,
-                        name: "Larissa Mendes",
-                        role: "Analista de Agendamento",
-                        photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=200",
-                        score: 2580,
-                        metric: 93,
-                        meta: 90,
-                        resultado: 93,
-                        kpis: {
-                            tempo_primeiro_atendimento: { meta: 5, realizado: 4.2 },
-                            bases_recebidas: { meta: 120, realizado: 135 },
-                            clientes_agendados: { meta: 90, realizado: 98 },
-                            efetividade: { meta: 85, realizado: 93 },
-                            taxa_no_show: { meta: 15, realizado: 7 }
-                        },
-                        activities: []
-                    }
-                ],
-                onboarding: [
-                    {
-                        id: 1,
-                        name: "Ana Silva",
-                        role: "Líder de Onboarding",
-                        photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
-                        score: 2450,
-                        metric: 98,
-                        meta: 95,
-                        resultado: 98,
-                        kpis: {
-                            clientes_ativos: { meta: 200, realizado: 215 },
-                            clientes_migrados: { meta: 180, realizado: 192 },
-                            carteira_concluida: { meta: 90, realizado: 98 },
-                            csat_medio: { meta: 4.5, realizado: 4.8 },
-                            total_avaliacao: { meta: 150, realizado: 167 },
-                            tempo_medio_migracao: { meta: 3, realizado: 2.5 },
-                            clientes_sem_homologacao: { meta: 10, realizado: 3 },
-                            cancelamentos: { meta: 5, realizado: 2 },
-                            churn: { meta: 2, realizado: 0.9 }
-                        },
-                        activities: []
-                    }
-                ],
-                ongoing: [/* ... */],
-                chat: [/* ... */],
-                retencao: [/* ... */]
-            };
-            saveToFirebase();
         }
 
         // 🍞 RENDERIZAR KPIs no CARD
@@ -828,7 +812,7 @@
 
             const kpisSection = document.createElement('div');
             kpisSection.className = 'kpis-section';
-            kpisSection.innerHTML = `<h4 style="margin-bottom: 15px; color: var(--text-primary);">📊 Indicadores - ${sector.toUpperCase()}</h4>`;
+            kpisSection.innerHTML = `<h4 style="margin-bottom: 15px; color: var(--text-primary);">📊 Indicadores</h4>`;
 
             sectorKpis[sector]?.forEach(kpiDef => {
                 const kpi = kpis[kpiDef.key];
@@ -891,7 +875,6 @@
                     </div>
                 `;
 
-                // Renderizar KPIs
                 renderKpis(sector, member.kpis, card);
 
                 card.innerHTML += `
@@ -945,7 +928,7 @@
             });
         }
 
-        // 🎨 CORES POR SETOR
+        // 🎨 CORES
         function getSectorColor(sector) {
             const colors = {
                 onboarding: '#6a3dff',
@@ -1035,23 +1018,29 @@
             renderChart(sector, members);
         }
 
-        // ➕ ADICIONAR PONTOS
+        // ➕ ADICIONAR PONTOS — FUNCIONAL
         function addScore(sector, id, points) {
             const pointValue = parseInt(points);
-            if (!pointValue || pointValue <= 0) return showToast('Valor inválido', 'error');
+            if (!pointValue || pointValue <= 0) {
+                showToast('Por favor, insira um valor válido maior que zero', 'error');
+                return;
+            }
 
             const member = sectors[sector].find(m => m.id === id);
             if (member) {
                 member.score += pointValue;
                 if (!member.activities) member.activities = [];
-                member.activities.unshift({ action: `+${pointValue} pontos`, date: new Date().toISOString() });
+                member.activities.unshift({
+                    action: `Ganhou ${pointValue} pontos`,
+                    date: new Date().toISOString()
+                });
                 saveToFirebase();
                 renderRanking(sector);
                 showToast(`${member.name} ganhou ${pointValue} pontos!`);
             }
         }
 
-        // ✏️ EDITAR MEMBRO
+        // ✏️ EDITAR — FUNCIONAL
         function editMember(id, sector) {
             const member = sectors[sector].find(m => m.id === id);
             if (!member) return;
@@ -1068,58 +1057,63 @@
             document.getElementById('memberMeta').value = member.meta;
             document.getElementById('memberResultado').value = member.resultado;
 
-            // Renderizar campos de KPIs
-            renderKpiInputs(sector, member.kpis);
-
+            updateKpiFields(sector); // Atualiza campos de KPI
             memberModal.style.display = 'flex';
         }
 
-        // 🧩 RENDERIZAR INPUTS DE KPIs NO MODAL
-        function renderKpiInputs(sector, kpis = {}) {
-            dynamicKpis.innerHTML = '<h3 style="margin: 20px 0 10px; color: var(--text-primary);">📊 Indicadores do Setor</h3>';
-            sectorKpis[sector]?.forEach(kpi => {
-                const kpiData = kpis[kpi.key] || { meta: 0, realizado: 0 };
-                dynamicKpis.innerHTML += `
-                    <div style="margin-bottom: 15px; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h4 style="margin-bottom: 10px; color: var(--text-primary);">${kpi.label}</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div>
-                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Meta</label>
-                                <input type="number" class="kpi-input" data-kpi="${kpi.key}" data-type="meta" value="${kpiData.meta}" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
-                            </div>
-                            <div>
-                                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Realizado</label>
-                                <input type="number" class="kpi-input" data-kpi="${kpi.key}" data-type="realizado" value="${kpiData.realizado}" style="width: 100%; padding: 8px; border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // 🗑️ DELETAR
+        // 🗑️ DELETAR — FUNCIONAL
         function deleteMember(sector, id) {
-            if (!confirm('Tem certeza?')) return;
+            if (!confirm('Tem certeza que deseja excluir este colaborador?')) return;
             sectors[sector] = sectors[sector].filter(m => m.id !== id);
             saveToFirebase();
             renderRanking(sector);
-            showToast('Colaborador removido!');
+            showToast('Colaborador removido com sucesso!');
         }
 
-        // ➕ ABRIR MODAL
+        // 🧩 SALVAR KPIs DO FORMULÁRIO
+        function collectKpisFromForm(sector) {
+            const kpis = {};
+            sectorKpis[sector]?.forEach(kpi => {
+                const metaInput = document.querySelector(`input[name="kpi_${kpi.key}_meta"]`);
+                const realInput = document.querySelector(`input[name="kpi_${kpi.key}_realizado"]`);
+                if (metaInput && realInput) {
+                    kpis[kpi.key] = {
+                        meta: parseFloat(metaInput.value) || 0,
+                        realizado: parseFloat(realInput.value) || 0
+                    };
+                }
+            });
+            return kpis;
+        }
+
+        // 📂 CARREGAR E SALVAR FIREBASE
+        function loadFromFirebase() {
+            return new Promise((resolve) => {
+                dbRef.once('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        sectors = data;
+                    }
+                    resolve();
+                });
+            });
+        }
+
+        function saveToFirebase() {
+            dbRef.set(sectors)
+                .then(() => console.log("✅ Dados salvos"))
+                .catch(err => {
+                    console.error("❌ Erro:", err);
+                    showToast("Erro ao salvar dados", "error");
+                });
+        }
+
+        // ➕ MODAL
         function openMemberModal() {
             document.getElementById('modalTitle').textContent = 'Adicionar Colaborador';
             document.getElementById('memberForm').reset();
             document.getElementById('memberId').value = '';
-
-            const activeTab = document.querySelector('.sector-tab.active');
-            if (activeTab) {
-                const sector = activeTab.getAttribute('data-sector');
-                document.getElementById('memberSector').value = sector;
-                document.getElementById('currentSector').value = sector;
-                renderKpiInputs(sector);
-            }
-
+            document.getElementById('dynamicKpis').innerHTML = '';
             memberModal.style.display = 'flex';
         }
 
@@ -1145,7 +1139,7 @@
             const savedTheme = localStorage.getItem('theme') || 'dark';
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                document.querySelector('#themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
             }
 
             // 🔍 BUSCA
@@ -1158,10 +1152,10 @@
             });
 
             // 📂 TROCAR ABA
-            sectorTabs.forEach(tab => {
+            document.querySelectorAll('.sector-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    sectorTabs.forEach(t => t.classList.remove('active'));
-                    sectorContents.forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.sector-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.sector-content').forEach(c => c.classList.remove('active'));
                     tab.classList.add('active');
                     const sector = tab.getAttribute('data-sector');
                     document.getElementById(`${sector}-content`).classList.add('active');
@@ -1171,12 +1165,12 @@
             });
 
             // ➕ MODAL
-            addMemberBtn.addEventListener('click', openMemberModal);
-            closeModal.addEventListener('click', () => memberModal.style.display = 'none');
+            document.getElementById('addMemberBtn').addEventListener('click', openMemberModal);
+            document.getElementById('closeModal').addEventListener('click', () => memberModal.style.display = 'none');
             window.addEventListener('click', e => { if (e.target === memberModal) memberModal.style.display = 'none'; });
 
-            // 💾 FORMULÁRIO
-            memberForm.addEventListener('submit', function(e) {
+            // 💾 FORMULÁRIO — TOTALMENTE FUNCIONAL
+            document.getElementById('memberForm').addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const id = document.getElementById('memberId').value;
@@ -1189,18 +1183,25 @@
                 const meta = parseInt(document.getElementById('memberMeta').value) || 90;
                 const resultado = parseInt(document.getElementById('memberResultado').value) || 90;
 
-                // Coletar KPIs
-                const kpis = {};
-                document.querySelectorAll('.kpi-input').forEach(input => {
-                    const kpiKey = input.getAttribute('data-kpi');
-                    const kpiType = input.getAttribute('data-type');
-                    if (!kpis[kpiKey]) kpis[kpiKey] = {};
-                    kpis[kpiKey][kpiType] = parseFloat(input.value) || 0;
-                });
+                const kpis = collectKpisFromForm(sector);
 
-                if (!name || !sector) return showToast('Preencha nome e setor!', 'error');
+                if (!name || !sector) {
+                    showToast('Nome e setor são obrigatórios!', 'error');
+                    return;
+                }
 
-                const newMember = { id: id ? parseInt(id) : Date.now(), name, role, photo, score, metric, meta, resultado, kpis, activities: [] };
+                const newMember = {
+                    id: id ? parseInt(id) : Date.now(),
+                    name,
+                    role,
+                    photo,
+                    score,
+                    metric,
+                    meta,
+                    resultado,
+                    kpis,
+                    activities: []
+                };
 
                 if (id) {
                     const oldSector = document.getElementById('currentSector').value;
@@ -1211,19 +1212,24 @@
                 saveToFirebase();
                 renderRanking(sector);
                 memberModal.style.display = 'none';
-                showToast(id ? 'Atualizado!' : 'Adicionado!');
+                showToast(id ? 'Colaborador atualizado!' : 'Novo colaborador adicionado!');
             });
 
-            // 🌞 TROCAR TEMA
-            themeToggle.addEventListener('click', function() {
-                const isLight = document.body.getAttribute('data-theme') === 'light';
-                document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
-                localStorage.setItem('theme', isLight ? 'dark' : 'light');
-                this.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            // 🌞 TEMA
+            document.getElementById('themeToggle').addEventListener('click', function() {
+                if (document.body.getAttribute('data-theme') === 'light') {
+                    document.body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'dark');
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    document.body.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                }
             });
 
             // 📤 EXPORTAR
-            exportBtn.addEventListener('click', function() {
+            document.getElementById('exportBtn').addEventListener('click', function() {
                 const sector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                 const dataStr = JSON.stringify(sectors[sector], null, 2);
                 const blob = new Blob([dataStr], { type: 'application/json' });
@@ -1232,27 +1238,38 @@
                 a.href = url;
                 a.download = `ranking-${sector}-${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
-                showToast('Exportado!');
+                showToast('Dados exportados com sucesso!');
             });
 
             // 🔄 RESETAR
-            resetBtn.addEventListener('click', function() {
-                if (!confirm('Resetar TUDO?')) return;
-                sectors = { onboarding: [], ongoing: [], chat: [], retencao: [], agendamento: [] };
-                saveToFirebase();
-                renderRanking(document.querySelector('.sector-tab.active').getAttribute('data-sector'));
-                showToast('Dados resetados!');
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja resetar todos os dados?')) {
+                    sectors = { onboarding: [], ongoing: [], chat: [], retencao: [], agendamento: [] };
+                    saveToFirebase();
+                    const sector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
+                    renderRanking(sector);
+                    showToast('Todos os dados foram resetados!');
+                }
             });
         });
 
         // 🍞 TOAST
         function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
             toastMessage.textContent = message;
             toast.className = 'toast show';
             if (type === 'error') toast.style.background = '#f44336';
-            else toast.style.background = getSectorColor(document.querySelector('.sector-tab.active')?.getAttribute('data-sector') || 'onboarding');
+            else {
+                const activeTab = document.querySelector('.sector-tab.active');
+                const sector = activeTab ? activeTab.getAttribute('data-sector') : 'onboarding';
+                toast.style.background = getSectorColor(sector);
+            }
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // Charts global
+        const charts = {};
     </script>
 </body>
 </html>
