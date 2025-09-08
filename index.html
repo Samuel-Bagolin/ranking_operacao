@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏆 Ranking por Setores</title>
+    <title>🏆 Ranking Inteligente por Setores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+
     <style>
         :root {
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
             --bg-tertiary: #2d2d2d;
-            --text-primary: #ffffff; /* TEXTO BRANCO NO MODO ESCURO */
+            --text-primary: #ffffff; /* BRANCO no modo escuro */
             --text-secondary: #b0b0b0;
             --border: #3a3a3a;
             --shadow: rgba(0, 0, 0, 0.4);
@@ -27,16 +32,24 @@
             /* Comparativo Meta x Resultado */
             --meta-color: #ff9800;
             --resultado-color: #4caf50;
+
+            /* Pódio */
+            --first-place: #ffd700;
+            --second-place: #c0c0c0;
+            --third-place: #cd7f32;
         }
 
         [data-theme="light"] {
             --bg-primary: #f8f9fa;
             --bg-secondary: #ffffff;
             --bg-tertiary: #f1f3f5;
-            --text-primary: #000000; /* TEXTO PRETO NO MODO CLARO */
+            --text-primary: #000000; /* PRETO no modo claro */
             --text-secondary: #666666;
             --border: #dee2e6;
             --shadow: rgba(0, 0, 0, 0.1);
+            --first-place: #ffeb3b;
+            --second-place: #cccccc;
+            --third-place: #d3a05f;
         }
 
         * {
@@ -48,7 +61,7 @@
 
         body {
             background-color: var(--bg-primary);
-            color: var(--text-primary);
+            color: var(--text-primary); /* Texto principal sempre adaptativo */
             min-height: 100vh;
             transition: var(--transition);
         }
@@ -86,6 +99,7 @@
         .logo h1 {
             font-size: 1.8rem;
             font-weight: 700;
+            color: var(--text-primary);
         }
 
         .theme-toggle {
@@ -196,6 +210,7 @@
             gap: 10px;
             background: var(--bg-tertiary);
             border: 2px solid transparent;
+            color: var(--text-primary);
         }
 
         .sector-tab:hover {
@@ -260,11 +275,13 @@
             font-size: 2.5rem;
             background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
             box-shadow: 0 5px 15px var(--shadow);
+            color: var(--text-primary);
         }
 
         .sector-info h2 {
             font-size: 1.8rem;
             margin-bottom: 8px;
+            color: var(--text-primary);
         }
 
         .sector-info p {
@@ -279,6 +296,7 @@
             font-weight: 600;
             display: inline-block;
             font-size: 0.9rem;
+            color: var(--text-primary);
         }
 
         /* Gráfico de desempenho */
@@ -301,6 +319,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--text-primary);
         }
 
         .podium-title i {
@@ -328,6 +347,7 @@
             transition: var(--transition);
             cursor: pointer;
             position: relative;
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .podium-item:hover {
@@ -335,9 +355,23 @@
             z-index: 10;
         }
 
-        .first { height: 240px; background: linear-gradient(to bottom, #ffd700, #daa520); order: 2; }
-        .second { height: 190px; background: linear-gradient(to bottom, #c0c0c0, #a8a8a8); order: 1; }
-        .third { height: 160px; background: linear-gradient(to bottom, #cd7f32, #8c5c2c); order: 3; }
+        .first { 
+            height: 240px; 
+            background: linear-gradient(to bottom, var(--first-place), #daa520); 
+            order: 2; 
+        }
+
+        .second { 
+            height: 190px; 
+            background: linear-gradient(to bottom, var(--second-place), #a8a8a8); 
+            order: 1; 
+        }
+
+        .third { 
+            height: 160px; 
+            background: linear-gradient(to bottom, var(--third-place), #8c5c2c); 
+            order: 3; 
+        }
 
         .podium-avatar {
             width: 90px;
@@ -353,13 +387,15 @@
             font-weight: 700;
             margin-bottom: 8px;
             font-size: 1.1rem;
-            color: #222;
+            color: var(--text-primary);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .podium-score {
             font-size: 1.4rem;
             font-weight: 800;
-            color: #222;
+            color: var(--text-primary);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .podium-rank {
@@ -390,6 +426,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--text-primary);
         }
 
         .ranking-container {
@@ -407,6 +444,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            color: var(--text-primary);
         }
 
         .card:hover {
@@ -443,6 +481,7 @@
             font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .member-role {
@@ -483,6 +522,7 @@
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
+            color: var(--text-primary);
         }
 
         .actions {
@@ -520,6 +560,7 @@
             max-width: 550px;
             box-shadow: 0 10px 30px var(--shadow);
             animation: modalPop 0.3s ease;
+            color: var(--text-primary);
         }
 
         @keyframes modalPop {
@@ -588,12 +629,14 @@
             overflow: hidden;
             box-shadow: 0 4px 12px var(--shadow);
             margin: 30px 0;
+            color: var(--text-primary);
         }
 
         .ranking-table th, .ranking-table td {
             padding: 16px;
             text-align: left;
             border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
         }
 
         .ranking-table th {
@@ -602,6 +645,7 @@
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
+            color: var(--text-primary);
         }
 
         .ranking-table tr:last-child td {
@@ -617,6 +661,7 @@
             text-align: center;
             width: 60px;
             font-size: 1.1rem;
+            color: var(--text-primary);
         }
 
         .position-1 { background-color: rgba(255, 215, 0, 0.1); }
@@ -634,6 +679,7 @@
         .activity-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
+            color: var(--text-primary);
         }
 
         .activity-item {
@@ -667,6 +713,7 @@
         .activity-text {
             font-weight: 500;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .activity-time {
@@ -777,7 +824,7 @@
         <header>
             <div class="logo">
                 <i class="fas fa-trophy"></i>
-                <h1>Ranking Setores</h1>
+                <h1>Ranking Inteligente por Setores</h1>
             </div>
             <div>
                 <button id="addMemberBtn"><i class="fas fa-plus"></i> Novo Colaborador</button>
@@ -1171,45 +1218,29 @@
     </div>
 
     <script>
+        // 🔥 INICIALIZAR FIREBASE
+        const firebaseConfig = {
+          apiKey: "AIzaSyDUIGP2oxXRedgBTJNqsOu7zh2SXlHulHM",
+          authDomain: "rankingsetores.firebaseapp.com",
+          databaseURL: "https://rankingsetores-default-rtdb.firebaseio.com",
+          projectId: "rankingsetores",
+          storageBucket: "rankingsetores.firebasestorage.app",
+          messagingSenderId: "212721253021",
+          appId: "1:212721253021:web:173e0ac624ee1bb2837274"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const dbRef = database.ref('sectors');
+
         // Dados iniciais com Meta e Resultado
         let sectors = {
-            onboarding: [
-                { id: 1, name: "Ana Silva", role: "Líder de Onboarding", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98, meta: 95, resultado: 98, activities: [
-                    { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
-                    { action: "Alcançou 98% de sucesso em integrações", date: "2024-05-05T14:20:00" }
-                ]},
-                { id: 2, name: "Carlos Oliveira", role: "Analista Jr", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95, meta: 90, resultado: 95, activities: [
-                    { action: "Superou meta mensal", date: "2024-05-03T09:15:00" }
-                ]},
-                { id: 3, name: "Mariana Santos", role: "Especialista Sênior", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93, meta: 90, resultado: 93, activities: [
-                    { action: "Recebeu prêmio de excelência", date: "2024-04-28T16:45:00" },
-                    { action: "Mentorou 3 novos colaboradores", date: "2024-05-02T11:30:00" }
-                ]},
-                { id: 4, name: "Ricardo Almeida", role: "Analista Pleno", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91, meta: 85, resultado: 91, activities: []},
-                { id: 5, name: "Fernanda Lima", role: "Coordenadora", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90, meta: 88, resultado: 90, activities: [
-                    { action: "Implementou novo processo de integração", date: "2024-04-30T13:20:00" }
-                ]}
-            ],
-            ongoing: [
-                { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, meta: 95, resultado: 97, activities: []},
-                { id: 7, name: "Juliana Martins", role: "Especialista em Suporte", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96, meta: 94, resultado: 96, activities: []},
-                { id: 8, name: "Roberto Santos", role: "Analista de Suporte", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94, meta: 90, resultado: 94, activities: []}
-            ],
-            chat: [
-                { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, meta: 97, resultado: 99, activities: []},
-                { id: 10, name: "Diego Alves", role: "Atendente Sênior", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97, meta: 95, resultado: 97, activities: []},
-                { id: 11, name: "Tatiane Souza", role: "Atendente Pleno", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96, meta: 93, resultado: 96, activities: []}
-            ],
-            retencao: [
-                { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, meta: 90, resultado: 92, activities: []},
-                { id: 13, name: "Rodrigo Ferreira", role: "Analista de Retenção", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90, meta: 88, resultado: 90, activities: []},
-                { id: 14, name: "Patrícia Silva", role: "Coordenadora de Retenção", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88, meta: 85, resultado: 88, activities: []}
-            ],
-            agendamento: [
-                { id: 15, name: "Felipe Costa", role: "Líder de Agendamento", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95, meta: 93, resultado: 95, activities: []},
-                { id: 16, name: "Larissa Mendes", role: "Analista de Agendamento", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93, meta: 90, resultado: 93, activities: []},
-                { id: 17, name: "Gabriel Oliveira", role: "Assistente de Agendamento", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91, meta: 88, resultado: 91, activities: []}
-            ]
+            onboarding: [],
+            ongoing: [],
+            chat: [],
+            retencao: [],
+            agendamento: []
         };
 
         // Elementos DOM
@@ -1229,21 +1260,76 @@
         // Charts
         const charts = {};
 
-        // Carregar do localStorage
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('rankingSectors');
-            if (saved) {
-                try {
-                    sectors = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Erro ao carregar dados salvos", e);
-                }
-            }
+        // Carregar dados do Firebase
+        function loadFromFirebase() {
+            return new Promise((resolve) => {
+                dbRef.once('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        sectors = data;
+                    } else {
+                        // Se não houver dados, inicializar com dados padrão
+                        initializeDefaultData();
+                    }
+                    resolve();
+                });
+            });
         }
 
-        // Salvar no localStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('rankingSectors', JSON.stringify(sectors));
+        // Salvar dados no Firebase
+        function saveToFirebase() {
+            dbRef.set(sectors)
+                .then(() => {
+                    console.log("Dados salvos no Firebase com sucesso!");
+                })
+                .catch((error) => {
+                    console.error("Erro ao salvar: ", error);
+                    showToast("Erro ao salvar dados online", 'error');
+                });
+        }
+
+        // Inicializar dados padrão (apenas se banco estiver vazio)
+        function initializeDefaultData() {
+            sectors = {
+                onboarding: [
+                    { id: 1, name: "Ana Silva", role: "Líder de Onboarding", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 98, meta: 95, resultado: 98, activities: [
+                        { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
+                        { action: "Alcançou 98% de sucesso em integrações", date: "2024-05-05T14:20:00" }
+                    ]},
+                    { id: 2, name: "Carlos Oliveira", role: "Analista Jr", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1980, metric: 95, meta: 90, resultado: 95, activities: [
+                        { action: "Superou meta mensal", date: "2024-05-03T09:15:00" }
+                    ]},
+                    { id: 3, name: "Mariana Santos", role: "Especialista Sênior", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 93, meta: 90, resultado: 93, activities: [
+                        { action: "Recebeu prêmio de excelência", date: "2024-04-28T16:45:00" },
+                        { action: "Mentorou 3 novos colaboradores", date: "2024-05-02T11:30:00" }
+                    ]},
+                    { id: 4, name: "Ricardo Almeida", role: "Analista Pleno", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 1780, metric: 91, meta: 85, resultado: 91, activities: []},
+                    { id: 5, name: "Fernanda Lima", role: "Coordenadora", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2210, metric: 90, meta: 88, resultado: 90, activities: [
+                        { action: "Implementou novo processo de integração", date: "2024-04-30T13:20:00" }
+                    ]}
+                ],
+                ongoing: [
+                    { id: 6, name: "Paulo Costa", role: "Gerente de Suporte", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2850, metric: 97, meta: 95, resultado: 97, activities: []},
+                    { id: 7, name: "Juliana Martins", role: "Especialista em Suporte", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2670, metric: 96, meta: 94, resultado: 96, activities: []},
+                    { id: 8, name: "Roberto Santos", role: "Analista de Suporte", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2450, metric: 94, meta: 90, resultado: 94, activities: []}
+                ],
+                chat: [
+                    { id: 9, name: "Camila Rodrigues", role: "Líder de Chat", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3120, metric: 99, meta: 97, resultado: 99, activities: []},
+                    { id: 10, name: "Diego Alves", role: "Atendente Sênior", photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2950, metric: 97, meta: 95, resultado: 97, activities: []},
+                    { id: 11, name: "Tatiane Souza", role: "Atendente Pleno", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2780, metric: 96, meta: 93, resultado: 96, activities: []}
+                ],
+                retencao: [
+                    { id: 12, name: "Amanda Nunes", role: "Especialista em Retenção", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3350, metric: 92, meta: 90, resultado: 92, activities: []},
+                    { id: 13, name: "Rodrigo Ferreira", role: "Analista de Retenção", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 3100, metric: 90, meta: 88, resultado: 90, activities: []},
+                    { id: 14, name: "Patrícia Silva", role: "Coordenadora de Retenção", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2890, metric: 88, meta: 85, resultado: 88, activities: []}
+                ],
+                agendamento: [
+                    { id: 15, name: "Felipe Costa", role: "Líder de Agendamento", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2750, metric: 95, meta: 93, resultado: 95, activities: []},
+                    { id: 16, name: "Larissa Mendes", role: "Analista de Agendamento", photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2580, metric: 93, meta: 90, resultado: 93, activities: []},
+                    { id: 17, name: "Gabriel Oliveira", role: "Assistente de Agendamento", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", score: 2420, metric: 91, meta: 88, resultado: 91, activities: []}
+                ]
+            };
+            saveToFirebase(); // Salvar dados iniciais
         }
 
         // Mostrar toast
@@ -1339,18 +1425,18 @@
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <img src="${member.photo}" alt="${member.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.src='https://via.placeholder.com/40'">
                             <div>
-                                <div style="font-weight: 600;">${member.name}</div>
+                                <div style="font-weight: 600; color: var(--text-primary);">${member.name}</div>
                                 <div style="font-size: 0.85rem; color: var(--text-secondary);">${member.role || 'Não informado'}</div>
                             </div>
                         </div>
                     </td>
-                    <td>${member.score} pts</td>
-                    <td>${member.metric}%</td>
+                    <td style="color: var(--text-primary);">${member.score} pts</td>
+                    <td style="color: var(--text-primary);">${member.metric}%</td>
                     <td style="color: var(--meta-color); font-weight: 600;">${member.meta}%</td>
                     <td style="color: var(--resultado-color); font-weight: 700;">${member.resultado}% ${statusIcon}</td>
                     <td>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="number" class="score-input" placeholder="+" style="width: 60px; padding: 6px; text-align: center;" min="1">
+                            <input type="number" class="score-input" placeholder="+" style="width: 60px; padding: 6px; text-align: center; background: var(--bg-tertiary); color: var(--text-primary);" min="1">
                             <button class="btn-small" style="background: #4caf50;" onclick="addScore('${sector}', ${member.id}, this.previousElementSibling.value)">+</button>
                             <button class="btn-small" style="background: #2196f3;" onclick="editMember(${member.id}, '${sector}')"><i class="fas fa-edit"></i></button>
                             <button class="btn-small" style="background: #f44336;" onclick="deleteMember('${sector}', ${member.id})"><i class="fas fa-trash"></i></button>
@@ -1377,19 +1463,19 @@
                     <div class="card-header">
                         <img src="${member.photo}" alt="${member.name}" class="avatar" onerror="this.src='https://via.placeholder.com/70'">
                         <div class="member-info">
-                            <h3>${member.name}</h3>
-                            <div class="member-role">${member.role || 'Não informado'}</div>
+                            <h3 style="color: var(--text-primary);">${member.name}</h3>
+                            <div class="member-role" style="color: var(--text-secondary);">${member.role || 'Não informado'}</div>
                         </div>
                         <div class="position-badge">#${index + 1}</div>
                     </div>
                     <div class="stats">
                         <div class="stat-box">
                             <div class="stat-label">Pontuação</div>
-                            <div class="stat-value">${member.score}</div>
+                            <div class="stat-value" style="color: var(--text-primary);">${member.score}</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Métrica</div>
-                            <div class="stat-value">${member.metric}%</div>
+                            <div class="stat-value" style="color: var(--text-primary);">${member.metric}%</div>
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin: 15px 0 10px; font-size: 0.9rem; flex-wrap: wrap;">
@@ -1401,7 +1487,7 @@
                         </div>
                     </div>
                     <div class="actions">
-                        <input type="number" class="score-input" placeholder="Adicionar pontos" min="1" style="flex: 1; margin-right: 8px;">
+                        <input type="number" class="score-input" placeholder="Adicionar pontos" min="1" style="flex: 1; margin-right: 8px; background: var(--bg-tertiary); color: var(--text-primary);">
                         <button class="btn-small" style="background: #4caf50; flex-shrink: 0;" onclick="addScore('${sector}', ${member.id}, this.previousElementSibling.value)">Adicionar</button>
                         <button class="btn-small" style="background: #2196f3;" onclick="editMember(${member.id}, '${sector}')">Editar</button>
                     </div>
@@ -1450,8 +1536,8 @@
                         <i class="fas fa-star"></i>
                     </div>
                     <div class="activity-content">
-                        <div class="activity-text"><strong>${activity.memberName}</strong> ${activity.action}</div>
-                        <div class="activity-time">${formattedDate}</div>
+                        <div class="activity-text" style="color: var(--text-primary);"><strong>${activity.memberName}</strong> ${activity.action}</div>
+                        <div class="activity-time" style="color: var(--text-secondary);">${formattedDate}</div>
                     </div>
                 `;
                 container.appendChild(item);
@@ -1474,7 +1560,7 @@
             
             charts[sector] = new Chart(ctx, {
                 type: 'bar',
-                data: {
+                 {
                     labels: labels,
                     datasets: [{
                         label: 'Pontuação',
@@ -1503,7 +1589,9 @@
                                 label: function(context) {
                                     return `Pontuação: ${context.parsed.y} pts`;
                                 }
-                            }
+                            },
+                            bodyColor: 'var(--text-primary)',
+                            titleColor: 'var(--text-primary)'
                         }
                     },
                     scales: {
@@ -1513,7 +1601,10 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: 'var(--text-secondary)'
+                                color: 'var(--text-primary)', // ✅ TEXTO BRANCO NO EIXO Y
+                                font: {
+                                    size: 12
+                                }
                             }
                         },
                         x: {
@@ -1521,7 +1612,10 @@
                                 display: false
                             },
                             ticks: {
-                                color: 'var(--text-primary)',
+                                color: 'var(--text-primary)', // ✅ TEXTO BRANCO NO EIXO X
+                                font: {
+                                    size: 12
+                                },
                                 maxRotation: 45,
                                 minRotation: 45
                             }
@@ -1550,7 +1644,7 @@
                     date: new Date().toISOString()
                 });
                 
-                saveToLocalStorage();
+                saveToFirebase();
                 renderRanking(sector);
                 showToast(`${member.name} ganhou ${pointValue} pontos!`);
             }
@@ -1580,7 +1674,7 @@
         function deleteMember(sector, id) {
             if (confirm('Tem certeza que deseja excluir este colaborador?')) {
                 sectors[sector] = sectors[sector].filter(m => m.id !== id);
-                saveToLocalStorage();
+                saveToFirebase();
                 renderRanking(sector);
                 showToast('Colaborador removido com sucesso!');
             }
@@ -1604,10 +1698,23 @@
         }
 
         // Eventos
-        document.addEventListener('DOMContentLoaded', () => {
-            loadFromLocalStorage();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadFromFirebase();
             renderRanking('onboarding');
-            
+
+            // Ouvir mudanças em tempo real
+            dbRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    sectors = data;
+                    const activeTab = document.querySelector('.sector-tab.active');
+                    if (activeTab) {
+                        const sector = activeTab.getAttribute('data-sector');
+                        renderRanking(sector);
+                    }
+                }
+            });
+
             // Troca de tema
             const savedTheme = localStorage.getItem('theme') || 'dark';
             if (savedTheme === 'light') {
@@ -1698,7 +1805,7 @@
                     showToast('Novo colaborador adicionado com sucesso!');
                 }
                 
-                saveToLocalStorage();
+                saveToFirebase();
                 renderRanking(sector);
                 memberModal.style.display = 'none';
             });
@@ -1720,7 +1827,7 @@
             exportBtn.addEventListener('click', function() {
                 const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                 const dataStr = JSON.stringify(sectors[activeSector], null, 2);
-                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const dataUri = 'application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
                 
                 const exportFileDefaultName = `ranking-${activeSector}-${new Date().toISOString().slice(0,10)}.json`;
                 
@@ -1738,7 +1845,7 @@
                     sectors = {
                         onboarding: [], ongoing: [], chat: [], retencao: [], agendamento: []
                     };
-                    saveToLocalStorage();
+                    saveToFirebase();
                     
                     const activeSector = document.querySelector('.sector-tab.active').getAttribute('data-sector');
                     renderRanking(activeSector);
