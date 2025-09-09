@@ -1312,7 +1312,11 @@
                 { key: "clientes_migrados", label: "Clientes migrados" },
                 { key: "carteira_concluida", label: "% carteira concluída" },
                 { key: "csat_medio", label: "CSAT médio" },
-                { key: "total_avaliacao", label: "Total de Avaliação" }
+                { key: "total_avaliacao", label: "Total de Avaliação" },
+                { key: "tempo_migracao", label: "Tempo médio de migração (dias)" },
+                { key: "sem_homologacao", label: "Clientes sem homologação (qtde)" },
+                { key: "cancelamentos", label: "Cancelamentos" },
+                { key: "churn", label: "Churn" }
             ],
             agendamento: [
                 { key: "tempo_primeiro_atendimento", label: "Tempo de 1º Atendimento (min)" },
@@ -1321,10 +1325,14 @@
                 { key: "efetividade", label: "Efetividade (%)" }
             ],
             ongoing: [
-                { key: "clientes_ativos_carteira", label: "Clientes ativos na carteira" },
-                { key: "clientes_engajados", label: "Clientes engajados" },
-                { key: "engajamento", label: "% engajamento" },
-                { key: "csat_medio", label: "CSAT médio" }
+               { key: "clientes_ativos_carteira", label: "Clientes ativos na carteira" },
+               { key: "clientes_engajados", label: "Clientes engajados" },
+               { key: "engajamento", label: "% engajamento" },
+               { key: "csat_medio", label: "CSAT médio" },
+               { key: "total_avaliacao", label: "Total de Avaliação" },
+               { key: "cancelamentos", label: "Cancelamentos" },
+               { key: "churn", label: "Churn" },
+               { key: "clientes_risco", label: "Clientes em risco (qtde)" }
             ],
             chat: [
                 { key: "total_atendimentos", label: "Total de atendimentos" },
@@ -1792,67 +1800,69 @@
             });
         }
 
-        // ✅ Renderizar cards (com KPIs)
-        function renderCards(sector, members) {
-            const container = document.getElementById(`${sector}-ranking`);
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            if (members.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-secondary); width: 100%; grid-column: 1 / -1;">
-                        <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <h3>Nenhum colaborador neste setor</h3>
-                        <p>Adicione o primeiro colaborador usando o botão "Novo Colaborador"</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            members.forEach((member, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.style.borderLeftColor = getActiveSectorColor();
-                const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <img src="${member.photo}" alt="${member.name}" class="avatar" onerror="this.src='https://via.placeholder.com/70'">
-                        <div class="member-info">
-                            <h3 style="color: var(--text-primary);">${member.name}</h3>
-                            <div class="member-role" style="color: var(--text-secondary);">${member.role || 'Não informado'}</div>
-                        </div>
-                        <div class="position-badge">#${index + 1}</div>
-                    </div>
-                    <div class="stats">
-                        <div class="stat-box">
-                            <div class="stat-label">Pontuação</div>
-                            <div class="stat-value" style="color: var(--text-primary);">${member.score}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Métrica</div>
-                            <div class="stat-value" style="color: var(--text-primary);">${member.metric}%</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin: 15px 0 10px; font-size: 0.9rem; flex-wrap: wrap;">
-                        <div style="background: var(--meta-color); color: black; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
-                            Meta: ${member.meta}%
-                        </div>
-                        <div style="background: var(--resultado-color); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
-                            Resultado: ${member.resultado}% ${statusIcon}
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <input type="number" class="score-input" placeholder="Adicionar pontos" min="1" style="flex: 1; margin-right: 8px; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 5px; border: 1px solid var(--border); padding: 8px;">
-                        <button class="btn-small" style="background: #4caf50; flex-shrink: 0;" onclick="addScore('${sector}', ${member.id}, this.previousElementSibling.value)">Adicionar</button>
-                        <button class="btn-small" style="background: #2196f3;" onclick="editMember(${member.id}, '${sector}')">Editar</button>
-                    </div>
-                `;
-                // ✅ Renderizar KPIs no card
-                renderKpisInCard(sector, member.kpis, card);
-                container.appendChild(card);
-            });
-        }
+// ✅ Renderizar cards (com KPIs)
+function renderCards(sector, members) {
+    const container = document.getElementById(`${sector}-ranking`);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (members.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary); width: 100%; grid-column: 1 / -1;">
+                <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3>Nenhum colaborador neste setor</h3>
+                <p>Adicione o primeiro colaborador usando o botão "Novo Colaborador"</p>
+            </div>
+        `;
+        return;
+    }
+    
+    members.forEach((member, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.borderLeftColor = getActiveSectorColor();
+        const statusIcon = member.resultado >= member.meta ? '✅' : '⚠️';
+        card.innerHTML = `
+            <div class="card-header">
+                <img src="${member.photo}" alt="${member.name}" class="avatar" onerror="this.src='https://via.placeholder.com/70'">
+                <div class="member-info">
+                    <h3 style="color: var(--text-primary);">${member.name}</h3>
+                    <div class="member-role" style="color: var(--text-secondary);">${member.role || 'Não informado'}</div>
+                </div>
+                <div class="position-badge">#${index + 1}</div>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Pontuação</div>
+                    <div class="stat-value" style="color: var(--text-primary);">${member.score}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Métrica</div>
+                    <div class="stat-value" style="color: var(--text-primary);">${member.metric}%</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin: 15px 0 10px; font-size: 0.9rem; flex-wrap: wrap;">
+                <div style="background: var(--meta-color); color: black; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
+                    Meta: ${member.meta}%
+                </div>
+                <div style="background: var(--resultado-color); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap;">
+                    Resultado: ${member.resultado}% ${statusIcon}
+                </div>
+            </div>
+            <div class="actions">
+                <input type="number" class="score-input" placeholder="Adicionar pontos" min="1" style="flex: 1; margin-right: 8px; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 5px; border: 1px solid var(--border); padding: 8px;">
+                <button class="btn-small" style="background: #4caf50; flex-shrink: 0;" onclick="addScore('${sector}', ${member.id}, this.previousElementSibling.value)">Adicionar</button>
+                <button class="btn-small" style="background: #2196f3;" onclick="editMember(${member.id}, '${sector}')">Editar</button>
+            </div>
+        `;
+        
+        // ✅ Renderizar KPIs no card - AGORA MOSTRANDO TODAS AS MÉTRICAS
+        renderKpisInCard(sector, member.kpis, card);
+        
+        container.appendChild(card);
+    });
+}
 
         // Renderizar atividades
         function renderActivities(sector, members) {
