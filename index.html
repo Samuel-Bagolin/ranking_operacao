@@ -637,7 +637,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-primary);
         }
         .activity-item:last-child {
             border-bottom: none;
@@ -687,7 +686,6 @@
         .kpi-label {
             font-weight: 600;
             flex: 1;
-            color: var(--text-primary);
         }
         .kpi-values {
             display: flex;
@@ -741,7 +739,6 @@
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
-            color: var(--text-primary);
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -911,7 +908,7 @@
                     <p class="sector-description">Equipe responsável pela integração de novos clientes</p>
                 </div>
                 <div class="sector-metric">
-                    <i class="fas fa-chart-line"></i> Tons de Sucesso na Integração
+                    <i class="fas fa-chart-line"></i> Taxa de Sucesso na Integração
                 </div>
             </div>
             
@@ -920,7 +917,7 @@
             </div>
             
             <div class="podium-section">
-                <h2 class="podium-title"><i class="fas fa-medal"></i> Ton 3 Performers</h2>
+                <h2 class="podium-title"><i class="fas fa-medal"></i> Top 3 Performers</h2>
                 <div class="podium" id="onboarding-podium">
                     <!-- Gerado por JS -->
                 </div>
@@ -1308,28 +1305,26 @@
             document.getElementById('firebaseStatus').innerHTML = '<i class="fas fa-wifi-slash"></i> <span>Desconectado</span>';
         }
 
-        // ✅ INDICADORES POR SETOR - ATUALIZADOS CONFORME SOLICITADO
+        // ✅ INDICADORES POR SETOR
         const sectorKpis = {
             onboarding: [
                 { key: "clientes_ativos", label: "Clientes Ativos" },
                 { key: "clientes_migrados", label: "Clientes migrados" },
                 { key: "carteira_concluida", label: "% carteira concluída" },
                 { key: "csat_medio", label: "CSAT médio" },
-                { key: "total_avaliacao", label: "Total de Avaliação" },
-                { key: "tempo_migracao", label: "Tempo médio de migração (dias)" },
-                { key: "sem_homologacao", label: "Clientes sem homologação (qtde)" },
-                { key: "cancelamentos", label: "Cancelamentos" },
-                { key: "churn", label: "Churn" }
+                { key: "total_avaliacao", label: "Total de Avaliação" }
+            ],
+            agendamento: [
+                { key: "tempo_primeiro_atendimento", label: "Tempo de 1º Atendimento (min)" },
+                { key: "bases_recebidas", label: "Bases recebidas" },
+                { key: "clientes_agendados", label: "Clientes agendados" },
+                { key: "efetividade", label: "Efetividade (%)" }
             ],
             ongoing: [
                 { key: "clientes_ativos_carteira", label: "Clientes ativos na carteira" },
                 { key: "clientes_engajados", label: "Clientes engajados" },
                 { key: "engajamento", label: "% engajamento" },
-                { key: "csat_medio", label: "CSAT médio" },
-                { key: "total_avaliacao", label: "Total de Avaliação" },
-                { key: "cancelamentos", label: "Cancelamentos" },
-                { key: "churn", label: "Churn" },
-                { key: "clientes_risco", label: "Clientes em risco (qtde)" }
+                { key: "csat_medio", label: "CSAT médio" }
             ],
             chat: [
                 { key: "total_atendimentos", label: "Total de atendimentos" },
@@ -1342,12 +1337,6 @@
                 { key: "reunioes_realizadas", label: "Reuniões realizadas" },
                 { key: "taxa_retencao", label: "Taxa de retenção (%)" },
                 { key: "casos_revertidos", label: "Casos revertidos com sucesso" }
-            ],
-            agendamento: [
-                { key: "tempo_primeiro_atendimento", label: "Tempo de 1º Atendimento (min)" },
-                { key: "bases_recebidas", label: "Bases recebidas" },
-                { key: "clientes_agendados", label: "Clientes agendados" },
-                { key: "efetividade", label: "Efetividade (%)" }
             ]
         };
 
@@ -1423,7 +1412,7 @@
         function saveToFirebase() {
             if (!dbRef) {
                 console.error("Firebase não inicializado");
-                showToast("Erro de conexão với o banco de dados", 'error');
+                showToast("Erro de conexão com o banco de dados", 'error');
                 return;
             }
             
@@ -1455,11 +1444,7 @@
                             clientes_migrados: { meta: 180, realizado: 192 },
                             carteira_concluida: { meta: 90, realizado: 98 },
                             csat_medio: { meta: 4.5, realizado: 4.8 },
-                            total_avaliacao: { meta: 150, realizado: 167 },
-                            tempo_migracao: { meta: 7, realizado: 6.5 },
-                            sem_homologacao: { meta: 5, realizado: 3 },
-                            cancelamentos: { meta: 10, realizado: 8 },
-                            churn: { meta: 5, realizado: 4.2 }
+                            total_avaliacao: { meta: 150, realizado: 167 }
                         },
                         activities: [
                             { action: "Concluiu treinamento avançado", date: "2024-05-01T10:30:00" },
@@ -1480,11 +1465,7 @@
                             clientes_migrados: { meta: 160, realizado: 158 },
                             carteira_concluida: { meta: 85, realizado: 88 },
                             csat_medio: { meta: 4.3, realizado: 4.5 },
-                            total_avaliacao: { meta: 130, realizado: 125 },
-                            tempo_migracao: { meta: 7, realizado: 7.2 },
-                            sem_homologacao: { meta: 5, realizado: 6 },
-                            cancelamentos: { meta: 10, realizado: 11 },
-                            churn: { meta: 5, realizado: 5.5 }
+                            total_avaliacao: { meta: 130, realizado: 125 }
                         },
                         activities: [
                             { action: "Realizou 15 integrações esta semana", date: "2024-05-10T09:15:00" }
@@ -1505,11 +1486,7 @@
                             clientes_ativos_carteira: { meta: 300, realizado: 315 },
                             clientes_engajados: { meta: 250, realizado: 260 },
                             engajamento: { meta: 80, realizado: 82 },
-                            csat_medio: { meta: 4.6, realizado: 4.7 },
-                            total_avaliacao: { meta: 200, realizado: 210 },
-                            cancelamentos: { meta: 15, realizado: 12 },
-                            churn: { meta: 7, realizado: 6.5 },
-                            clientes_risco: { meta: 20, realizado: 18 }
+                            csat_medio: { meta: 4.6, realizado: 4.7 }
                         }, 
                         activities: [
                             { action: "Implementou novo processo de suporte", date: "2024-05-03T11:20:00" }
@@ -1528,11 +1505,7 @@
                             clientes_ativos_carteira: { meta: 200, realizado: 210 },
                             clientes_engajados: { meta: 180, realizado: 175 },
                             engajamento: { meta: 75, realizado: 77 },
-                            csat_medio: { meta: 4.5, realizado: 4.6 },
-                            total_avaliacao: { meta: 150, realizado: 145 },
-                            cancelamentos: { meta: 12, realizado: 14 },
-                            churn: { meta: 6, realizado: 6.8 },
-                            clientes_risco: { meta: 15, realizado: 17 }
+                            csat_medio: { meta: 4.5, realizado: 4.6 }
                         },
                         activities: [
                             { action: "Resolveu 98% dos chamados na primeira interação", date: "2024-05-08T16:45:00" }
@@ -1837,7 +1810,7 @@
                 return;
             }
             
-            members.forEach((member, index) {
+            members.forEach((member, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.style.borderLeftColor = getActiveSectorColor();
