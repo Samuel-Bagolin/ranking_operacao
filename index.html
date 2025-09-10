@@ -1357,6 +1357,16 @@
             agendamento: []
         };
 
+        // Garantir que todos os setores existem
+        function ensureSectorsExist() {
+            const requiredSectors = ['onboarding', 'ongoing', 'chat', 'retencao', 'agendamento'];
+            requiredSectors.forEach(sector => {
+                if (!sectors[sector]) {
+                    sectors[sector] = [];
+                }
+            });
+        }
+
         // Elementos DOM
         const sectorTabs = document.querySelectorAll('.sector-tab');
         const sectorContents = document.querySelectorAll('.sector-content');
@@ -1379,24 +1389,24 @@
         function loadFromFirebase() {
             return new Promise((resolve) => {
                 if (!dbRef) {
-                    console.error("Firebase não inicializado");
+                    console.error("Firebase não inicializado, usando dados padrão");
                     initializeDefaultData();
                     resolve();
                     return;
                 }
                 
-                // Mostrar status de carregamento
-                document.getElementById('firebaseStatus').className = 'firebase-status status-loading';
-                document.getElementById('firebaseStatus').innerHTML = '<div class="loading"></div> <span>Carregando dados...</span>';
-                
-                dbRef.once('value', (snapshot) => {
+                dbRef.once('value').then((snapshot) => {
                     const data = snapshot.val();
-                    if (data) {
+                    if (data && typeof data === 'object') {
                         sectors = data;
-                        showToast("Dados carregados com sucesso!");
+                        console.log("Dados carregados do Firebase:", sectors);
                     } else {
+                        console.log("Nenhum dado encontrado no Firebase, inicializando dados padrão");
                         initializeDefaultData();
                     }
+                    
+                    // Garantir que todos os setores existem
+                    ensureSectorsExist();
                     
                     // Atualizar status de conexão
                     document.getElementById('firebaseStatus').className = 'firebase-status status-connected';
@@ -1406,6 +1416,7 @@
                 }).catch((error) => {
                     console.error("Erro ao carregar dados:", error);
                     initializeDefaultData();
+                    ensureSectorsExist();
                     
                     // Atualizar status de conexão
                     document.getElementById('firebaseStatus').className = 'firebase-status status-disconnected';
@@ -1423,6 +1434,8 @@
                 showToast("Erro de conexão com o banco de dados", 'error');
                 return;
             }
+            
+            console.log("Salvando dados no Firebase:", sectors);
             
             dbRef.set(sectors)
                 .then(() => {
@@ -2207,10 +2220,24 @@ function renderCards(sector, members) {
                     activities: []
                 };
 
+                console.log('Objeto newMember antes de salvar:', newMember);
+                console.log('Setor selecionado:', sector);
+                console.log('Estado atual do sectors:', sectors);
+
+                // Garantir que todos os setores existem
+                ensureSectorsExist();
+
+                // Garantir que o array do setor existe
+                if (!sectors[sector]) {
+                    sectors[sector] = [];
+                }
+
                 if (id) {
                     // Modo edição - remover do setor antigo primeiro
                     const oldSector = document.getElementById('currentSector').value;
-                    sectors[oldSector] = sectors[oldSector].filter(m => m.id !== parseInt(id));
+                    if (sectors[oldSector]) {
+                        sectors[oldSector] = sectors[oldSector].filter(m => m.id !== parseInt(id));
+                    }
                     
                     // Adicionar ao novo setor (que pode ser o mesmo ou diferente)
                     sectors[sector].push(newMember);
